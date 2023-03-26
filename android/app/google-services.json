@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "701247435564",
+    "project_id": "born-90f19",
+    "storage_bucket": "born-90f19.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:701247435564:android:c763d8c888eb480f25f289",
+        "android_client_info": {
+          "package_name": "com.born"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "701247435564-4r6j25b1lq11aaa0tnvajato0rlrrrm5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.born",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "701247435564-brdmlo4opuhnn9ujoneimdfiobgvv6hk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDfRZibtaMRZy6X5XtlcV39LQ0AlSS4cX4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "701247435564-brdmlo4opuhnn9ujoneimdfiobgvv6hk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
