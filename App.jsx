@@ -5,9 +5,8 @@ import {ThemeProvider} from 'styled-components';
 import {darkTheme, lightTheme} from './src/config/theme';
 import notifee, {EventType} from '@notifee/react-native';
 import {StatusBar, Text, useColorScheme, View} from 'react-native';
-import 'react-native-gesture-handler';
-import SplashScreen from 'react-native-splash-screen';
 import FlashMessage from 'react-native-flash-message';
+import {SplashScreen} from './src/screens/Splash';
 
 function App() {
   // TODO: theme context
@@ -50,11 +49,7 @@ function App() {
   }, []);
 
   if (loading) {
-    return (
-      <View style={{backgroundColor: 'red'}}>
-        <Text>Hi</Text>
-      </View>
-    );
+    return <SplashScreen />;
   }
 
   return (
