@@ -5,6 +5,7 @@ import {UserLayout} from '../../../../components/layout/UserLayout';
 import {getPaginatedEvents} from '../../../../services/events';
 import {Event} from '../../../../components/Event';
 import {useFocusEffect} from '@react-navigation/native';
+import {error} from '../../../../utils/notifications';
 
 const EventList = () => {
   const theme = useTheme();
@@ -22,7 +23,7 @@ const EventList = () => {
         setData(prev => [...prev, ...res.data.records]);
       }
     } catch (err) {
-      console.log(err.message);
+      error(err.message);
     }
     if (page === 0) setLoading(false);
   };

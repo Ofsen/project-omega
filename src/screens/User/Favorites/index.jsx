@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import styled, {useTheme} from 'styled-components';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {error} from '../../../utils/notifications';
 
 const Favorites = () => {
   const theme = useTheme();
@@ -19,7 +20,7 @@ const Favorites = () => {
       const localData = await AsyncStorage.getItem('favorites');
       setData(JSON.parse(localData || '[]'));
     } catch (err) {
-      console.log(err.message);
+      error(err.message);
     }
     setLoading(false);
   };
@@ -30,7 +31,7 @@ const Favorites = () => {
       const localData = await AsyncStorage.getItem('favorites');
       setData(JSON.parse(localData || '[]'));
     } catch (err) {
-      console.log(err.message);
+      error(err.message);
     }
     setRefreshing(false);
   };
@@ -43,7 +44,7 @@ const Favorites = () => {
       await AsyncStorage.setItem('favorites', JSON.stringify(filteredData));
       fetchData();
     } catch (err) {
-      console.log(err.message);
+      error(err.message);
     }
   };
 

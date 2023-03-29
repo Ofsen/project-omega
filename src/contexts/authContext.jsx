@@ -1,5 +1,6 @@
 import React, {createContext, useContext, useEffect, useState} from 'react';
 import auth from '@react-native-firebase/auth';
+import {error} from '../utils/notifications';
 
 const authContextInitialValues = {
   currentUser: undefined,
@@ -42,7 +43,7 @@ export function AuthProvider(props) {
     try {
       await auth().signOut();
     } catch (err) {
-      console.log(err.message);
+      error(err.message);
     }
   };
 

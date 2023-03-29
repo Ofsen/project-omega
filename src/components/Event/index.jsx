@@ -4,6 +4,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Icon from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {error} from '../../utils/notifications';
 
 export const Event = props => {
   const {id, title, leadText, dateStart, dateEnd, coverUrl, tags} = props;
@@ -17,7 +18,7 @@ export const Event = props => {
       const isFavorited = parsedData.find(item => item.eventId === id);
       setFavorite(isFavorited);
     } catch (err) {
-      console.lgo(err.message);
+      error(err.message);
     }
   };
 
@@ -38,7 +39,7 @@ export const Event = props => {
         setFavorite(true);
       }
     } catch (err) {
-      console.log(err.message);
+      error(err.message);
     }
   };
 

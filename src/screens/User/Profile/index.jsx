@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import notifee from '@notifee/react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import messaging from '@react-native-firebase/messaging';
+import {error} from '../../../utils/notifications';
 
 const Profile = () => {
   const {Logout, currentUser} = useAuth();
@@ -31,7 +32,7 @@ const Profile = () => {
         name: 'Default Channel',
       });
     } catch (err) {
-      console.log(err.message);
+      error(err.message);
     }
   };
 
@@ -54,7 +55,7 @@ const Profile = () => {
         },
       });
     } catch (err) {
-      console.log(err.message);
+      error(err.message);
     }
   };
 

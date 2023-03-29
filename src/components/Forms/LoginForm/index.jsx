@@ -21,7 +21,6 @@ const LoginForm = () => {
     try {
       await Login(form.email, form.password);
     } catch (error) {
-      console.log(error);
       setForm(prev => ({
         ...prev,
         error: error.message,

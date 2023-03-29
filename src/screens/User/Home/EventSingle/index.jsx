@@ -11,6 +11,7 @@ import {
 import {getSingleEvent} from '../../../../services/events';
 import moment from 'moment';
 import {Button} from '../../../../components/Button';
+import {error} from '../../../../utils/notifications';
 
 const EventSingle = props => {
   const {route} = props;
@@ -25,7 +26,7 @@ const EventSingle = props => {
         setData(res.data.record);
       }
     } catch (err) {
-      console.log(err.message);
+      error(err.message);
     }
     setLoading(false);
   };

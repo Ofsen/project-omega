@@ -7,6 +7,7 @@ import notifee, {EventType} from '@notifee/react-native';
 import {StatusBar, Text, useColorScheme, View} from 'react-native';
 import 'react-native-gesture-handler';
 import SplashScreen from 'react-native-splash-screen';
+import FlashMessage from 'react-native-flash-message';
 
 function App() {
   // TODO: theme context
@@ -68,6 +69,7 @@ function App() {
           hidden={false}
         />
         <MainRoutes />
+        <FlashMessage position="top" floating />
       </AuthProvider>
     </ThemeProvider>
   );
