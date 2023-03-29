@@ -23,7 +23,7 @@ export const Button = props => {
   const {
     label,
     pressHandler,
-    variant = 'primary',
+    variant = 'blue',
     outline = false,
     icon = null,
   } = props;

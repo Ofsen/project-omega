@@ -67,14 +67,14 @@ const FormContainer = styled.View`
 `;
 
 const LinkText = styled.Text`
-  color: ${({theme}) => theme.primary};
+  color: ${({theme}) => theme.blue};
   font-weight: bold;
   text-align: center;
   margin-top: 16px;
 `;
 
 const ErrorContainer = styled.View`
-  background-color: ${({theme}) => theme.tint};
+  background-color: ${({theme}) => theme.red};
   padding: 16px;
   margin-top: 8px;
 `;

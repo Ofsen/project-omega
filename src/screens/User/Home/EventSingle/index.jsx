@@ -37,7 +37,7 @@ const EventSingle = props => {
 
   return loading ? (
     <Centered>
-      <ActivityIndicator size="large" color={theme.primary} />
+      <ActivityIndicator size="large" color={theme.red} />
     </Centered>
   ) : data === null ? (
     <Centered>
@@ -104,14 +104,14 @@ const ContentContainer = styled.View`
 const Title = styled.Text`
   font-size: 24px;
   font-weight: bold;
-  color: ${({theme}) => theme.primary};
+  color: ${({theme}) => theme.blue};
 `;
 
 const Subtitle = styled.Text`
   font-size: 19px;
   font-weight: bold;
   margin-top: 16px;
-  color: ${({theme}) => theme.statusBar};
+  color: ${({theme}) => theme.lightgray};
 `;
 
 const Paragraph = styled.Text`
@@ -122,13 +122,4 @@ const Paragraph = styled.Text`
 const Date = styled.Text`
   color: ${({theme}) => theme.color};
   font-weight: bold;
-`;
-
-const Touchable = styled.Pressable`
-  width: 100%;
-  padding: 14px 20px;
-  background-color: ${props =>
-    props.outline ? 'transparent' : props.theme[props.variant]};
-
-  ${props => props.outline && 'border: 2px solid ' + props.theme[props.variant]}
 `;

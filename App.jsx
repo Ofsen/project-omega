@@ -4,14 +4,34 @@ import {MainRoutes} from './src/config/MainRoutes';
 import {ThemeProvider} from 'styled-components';
 import {darkTheme, lightTheme} from './src/config/theme';
 import notifee, {EventType} from '@notifee/react-native';
-import {StatusBar, Text, useColorScheme, View} from 'react-native';
+import {StatusBar} from 'react-native';
 import FlashMessage from 'react-native-flash-message';
 import {SplashScreen} from './src/screens/Splash';
+import {Provider} from 'react-redux';
+import {PersistGate} from 'redux-persist/integration/react';
+import {persistor, store} from './src/config/store';
+import {useSelector} from 'react-redux';
 
-function App() {
-  // TODO: theme context
-  const [theme, setTheme] = useState('light');
+const EntryPoint = () => {
+  const theme = useSelector(state => state.theme.storedTheme);
 
+  return (
+    <ThemeProvider theme={theme === 'light' ? lightTheme : darkTheme}>
+      <AuthProvider>
+        <StatusBar
+          animated={true}
+          barStyle="light-content"
+          backgroundColor={theme === 'light' ? lightTheme.blue : darkTheme.blue}
+          hidden={false}
+        />
+        <MainRoutes />
+        <FlashMessage position="top" floating />
+      </AuthProvider>
+    </ThemeProvider>
+  );
+};
+
+const App = () => {
   const [loading, setLoading] = useState(true);
 
   // Bootstrap sequence function
@@ -53,21 +73,12 @@ function App() {
   }
 
   return (
-    <ThemeProvider theme={theme === 'light' ? lightTheme : darkTheme}>
-      <AuthProvider>
-        <StatusBar
-          animated={true}
-          barStyle={theme === 'light' ? 'light-content' : 'dark-content'}
-          backgroundColor={
-            theme === 'light' ? lightTheme.statusBar : darkTheme.statusBar
-          }
-          hidden={false}
-        />
-        <MainRoutes />
-        <FlashMessage position="top" floating />
-      </AuthProvider>
-    </ThemeProvider>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <EntryPoint />
+      </PersistGate>
+    </Provider>
   );
-}
+};
 
 export default App;

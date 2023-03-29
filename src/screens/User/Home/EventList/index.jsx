@@ -51,7 +51,7 @@ const EventList = () => {
     <UserLayout title="Accueil">
       {loading ? (
         <Centered>
-          <ActivityIndicator size="large" color={theme.primary} />
+          <ActivityIndicator size="large" color={theme.red} />
         </Centered>
       ) : (
         <List
@@ -88,7 +88,7 @@ const EventList = () => {
             if (data.length > 0) {
               return (
                 <Centered>
-                  <ActivityIndicator size="large" color={theme.primary} />
+                  <ActivityIndicator size="large" color={theme.red} />
                 </Centered>
               );
             }

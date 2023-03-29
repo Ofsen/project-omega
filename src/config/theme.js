@@ -1,15 +1,22 @@
+const defaultColors = {
+  blue: '#2059E0',
+  red: '#DF2935',
+  yellow: '#FDCA40',
+  white: '#fff',
+};
+
 export const darkTheme = {
-  statusBar: '#111C2E',
-  background: '#111C2E',
-  primary: '#0e4faf',
-  tint: '#EE3A3A',
-  color: '#f7f7f7',
+  secondaryBackground: '#212224',
+  background: '#080708',
+  lightgray: '#9EA4B7',
+  color: '#F6F8FA',
+  ...defaultColors,
 };
 
 export const lightTheme = {
-  statusBar: '#111C2E',
-  background: '#f7f7f7',
-  primary: '#0e4faf',
-  tint: '#EE3A3A',
-  color: '#111C2E',
+  secondaryBackground: '#E1E3E7',
+  background: '#F6F8FA',
+  lightgray: '#212224',
+  color: '#080708',
+  ...defaultColors,
 };

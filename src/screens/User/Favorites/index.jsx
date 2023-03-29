@@ -58,7 +58,7 @@ const Favorites = () => {
     <UserLayout title="Favories">
       {loading ? (
         <Centered>
-          <ActivityIndicator size="large" color={theme.primary} />
+          <ActivityIndicator size="large" color={theme.red} />
         </Centered>
       ) : (
         <List
@@ -73,7 +73,7 @@ const Favorites = () => {
               }>
               <Title numberOfLines={1}>{item.title}</Title>
               <FavoriteButton onPress={() => removeFavorite(item.eventId)}>
-                <Icon name={'ios-heart-dislike'} size={28} color={theme.tint} />
+                <Icon name={'ios-heart-dislike'} size={28} color={theme.red} />
               </FavoriteButton>
             </PressableContainer>
           )}
@@ -108,7 +108,7 @@ const Text = styled.Text`
 `;
 
 const PressableContainer = styled.Pressable`
-  background-color: white;
+  background-color: ${({theme}) => theme.secondaryBackground};
   flex: 1;
   flex-direction: row;
   width: 100%;
@@ -122,7 +122,7 @@ const Title = styled.Text`
   flex-basis: 80%;
   font-size: 24px;
   font-weight: bold;
-  color: ${({theme}) => theme.primary};
+  color: ${({theme}) => theme.blue};
 `;
 
 const FavoriteButton = styled.Pressable`

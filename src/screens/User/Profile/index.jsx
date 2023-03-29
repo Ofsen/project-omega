@@ -8,9 +8,12 @@ import notifee from '@notifee/react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import messaging from '@react-native-firebase/messaging';
 import {error} from '../../../utils/notifications';
+import {useDispatch} from 'react-redux';
+import {toggleTheme} from '../../../actions/theme';
 
 const Profile = () => {
   const {Logout, currentUser} = useAuth();
+  const dispatch = useDispatch();
 
   const initNotification = async () => {
     try {
@@ -76,7 +79,7 @@ const Profile = () => {
     <UserLayout title="Profile">
       <ContentContainer>
         <TextField label="Email" value={currentUser.email} disabled />
-        <Button variant="tint" label="Logout" pressHandler={() => Logout()} />
+        <Button variant="red" label="Logout" pressHandler={() => Logout()} />
         <Button
           label="Notify me"
           pressHandler={() =>
@@ -85,6 +88,11 @@ const Profile = () => {
               'Main body content of the notification',
             )
           }
+        />
+        <Button
+          label="Toggle theme"
+          variant="yellow"
+          pressHandler={() => dispatch(toggleTheme())}
         />
       </ContentContainer>
     </UserLayout>

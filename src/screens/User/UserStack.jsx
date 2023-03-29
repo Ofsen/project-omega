@@ -22,11 +22,11 @@ const UserStack = () => {
       }}>
       <Tab.Navigator
         shifting={true}
-        inactiveColor={'#799ecb'}
+        inactiveColor={theme.background}
         activeColor={theme.background}
         safeAreaInsets={{bottom: -10}}
         barStyle={{
-          backgroundColor: theme.primary,
+          backgroundColor: theme.blue,
         }}
         screenOptions={({route}) => ({
           tabBarIcon: ({focused, color, size}) => {
@@ -48,7 +48,6 @@ const UserStack = () => {
 
             return <Icons name={iconName} size={24} color={color} />;
           },
-          tabBarActiveTintColor: theme.primary,
           headerShown: false,
           tabBarShowLabel: false,
         })}>

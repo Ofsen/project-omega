@@ -22,9 +22,9 @@ const HomeStack = () => {
         options={({route}) => ({
           title: route.params.title,
           headerStyle: {
-            backgroundColor: theme.statusBar,
+            backgroundColor: theme.blue,
           },
-          headerTintColor: '#fff',
+          headerTintColor: theme.white,
           headerTitleStyle: {
             fontWeight: 'bold',
           },

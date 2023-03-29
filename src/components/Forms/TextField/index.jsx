@@ -6,7 +6,7 @@ const FieldContainer = styled.View`
 `;
 
 const Input = styled.TextInput`
-  border: 2px solid ${({theme}) => theme.color};
+  border: 2px solid ${props => props.theme[props.variant]};
   color: ${({theme}) => theme.color};
   padding: 8px 16px;
 `;
@@ -24,6 +24,7 @@ const TextField = props => {
     change,
     keyboardType,
     disabled = false,
+    variant = 'secondaryBackground',
   } = props;
   const theme = useTheme();
 
@@ -38,6 +39,7 @@ const TextField = props => {
         keyboardType={keyboardType}
         secureTextEntry={type === 'password'}
         readOnly={disabled}
+        variant={variant}
       />
     </FieldContainer>
   );

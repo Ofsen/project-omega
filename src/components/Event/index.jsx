@@ -77,7 +77,7 @@ export const Event = props => {
 };
 
 const PressableContainer = styled.Pressable`
-  background-color: white;
+  background-color: ${({theme}) => theme.secondaryBackground};
   width: 100%;
   margin-bottom: 16px;
 `;
@@ -112,7 +112,7 @@ const ContentContainer = styled.View`
 const Title = styled.Text`
   font-size: 24px;
   font-weight: bold;
-  color: ${({theme}) => theme.primary};
+  color: ${({theme}) => theme.blue};
 `;
 
 const LeadingText = styled.Text`
