@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Text} from 'react-native-paper';
 import styled from 'styled-components';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -36,5 +36,5 @@ const Container = styled.View`
   flex: 1;
   align-items: center;
   justify-content: center;
-  background-color: transparent;
+  background-color: ${({theme}) => theme.white};
 `;
