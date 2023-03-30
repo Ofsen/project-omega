@@ -36,7 +36,7 @@ export const MainRoutes = () => {
   };
 
   useEffect(() => {
-    if (!loading) setupPlayer();
+    if (loading) setupPlayer();
     setTimeout(() => {
       setLoading(false);
     }, 2000);
