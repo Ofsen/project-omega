@@ -8,6 +8,7 @@ import {Provider as PaperProvider} from 'react-native-paper';
 import Profile from './Profile';
 import HomeStack from './Home/HomeStack';
 import Favorites from './Favorites';
+import Velibs from './Velibs';
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -36,6 +37,9 @@ const UserStack = () => {
               case 'Home':
                 iconName = focused ? 'home' : 'home-outline';
                 break;
+              case 'Velib':
+                iconName = focused ? 'bicycle' : 'bicycle-outline';
+                break;
               case 'Favorites':
                 iconName = focused ? 'ios-heart' : 'ios-heart-outline';
                 break;
@@ -52,6 +56,7 @@ const UserStack = () => {
           tabBarShowLabel: false,
         })}>
         <Tab.Screen name="Home" component={HomeStack} />
+        <Tab.Screen name="Velib" component={Velibs} />
         <Tab.Screen name="Favorites" component={Favorites} />
         <Tab.Screen name="Profile" component={Profile} />
       </Tab.Navigator>
