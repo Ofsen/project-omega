@@ -16,7 +16,7 @@ const AuthStack = () => {
         headerStyle: {
           backgroundColor: theme.blue,
         },
-        headerTintColor: theme.background,
+        headerTintColor: theme.white,
         headerTitleStyle: {
           fontWeight: 'bold',
         },

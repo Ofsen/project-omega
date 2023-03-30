@@ -1,6 +1,5 @@
 {
   "editor.renderWhitespace": "boundary",
-  "javascript.validate.enable": false,
   "editor.tabSize": 2,
   "git.ignoreLimitWarning": true,
   "editor.codeActionsOnSave": {
