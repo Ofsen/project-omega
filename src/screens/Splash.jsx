@@ -5,29 +5,10 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {StatusBar} from 'react-native';
 import Lottie from 'lottie-react-native';
 import animation from '../assets/animations/splash.json';
-import TrackPlayer from 'react-native-track-player';
 
 const Stack = createNativeStackNavigator();
 
 export const SplashScreen = () => {
-
-  const [isPlayerReady, setIsPlayerReady] = useState(false);
-
-  useEffect( () => {
-    const setupPlayer = async () => {
-    await TrackPlayer.setupPlayer();
-    await TrackPlayer.add({
-      id:'1',
-      url: require('../assets/sound/sound.mp3'),
-      title: 'Born'
-      });
-    TrackPlayer.play();
-    setIsPlayerReady(true);
-  };
-  if(!isPlayerReady)
-  setupPlayer();
-}, []);
-  
   return (
     <Container>
       <StatusBar hidden />
@@ -55,5 +36,5 @@ const Container = styled.View`
   flex: 1;
   align-items: center;
   justify-content: center;
-  background-color: transparent;
+  background-color: ${({theme}) => theme.white};
 `;
