@@ -1,12 +1,12 @@
 import React, {useEffect, useState, useCallback} from 'react';
 import styled, {useTheme} from 'styled-components';
-import {ActivityIndicator, FlatList, Text} from 'react-native';
+import {ActivityIndicator, FlatList, Text, TextInput} from 'react-native';
 import {UserLayout} from '../../../components/layout/UserLayout';
-import {callApi} from '../../../services/events';
-import {Event} from '../../../../components/Event';
+import {callApi, getCommunes} from '../../../services/events';
 import {useFocusEffect} from '@react-navigation/native';
 import {error} from '../../../utils/notifications';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {Picker} from '@react-native-picker/picker';
 
 const Velibs = () => {
   const theme = useTheme();
@@ -14,13 +14,15 @@ const Velibs = () => {
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [available, setAvailable] = React.useState(false);
+
+  const [communes, setCommunes] = useState([]);
+  const [selectedCommune, setSelectedCommune] = useState(null);
 
   const size = 5;
 
   const fetchData = async () => {
     try {
-      const res = await callApi(size, page);
+      const res = await callApi(size, page, selectedCommune);
       if (res.status === 200) {
         setData(prev => [...prev, ...res.data.records]);
       }
@@ -37,17 +39,33 @@ const Velibs = () => {
     setPage(0);
   };
 
-  useEffect(() => {
-    fetchData();
-  }, [page]);
-
   useFocusEffect(
     useCallback(() => {
       setData([]);
       setLoading(true);
       setPage(0);
+      if (page === 0) fetchData();
     }, []),
   );
+
+  useEffect(() => {
+    fetchData();
+  }, [page]);
+
+  const fetchCommunes = async () => {
+    try {
+      const response = await getCommunes();
+      if (response) {
+        setCommunes(response.facets[0].facets);
+      }
+    } catch (err) {
+      error(err.message);
+    }
+  };
+  
+  useEffect(() => {
+    fetchCommunes();
+  }, []);
 
   const renderItem = ({item}) => {
     const fields = item.fields;
@@ -85,6 +103,25 @@ const Velibs = () => {
 
   return (
     <UserLayout title="Velib">
+      <SearchContainer>
+      <Picker
+        selectedValue={selectedCommune}
+        style={{flex: 1}}
+        onValueChange={(itemValue) => {
+          setSelectedCommune(itemValue);
+          setPage(0);
+          setData([]);
+        }}>
+        <Picker.Item label="Toutes les communes" value={null} />
+        {communes.map((commune, index) => (
+          <Picker.Item
+            key={index}
+            label={commune.name}
+            value={commune.name}
+          />
+        ))}
+      </Picker>
+    </SearchContainer>
       {loading ? (
         <Centered>
           <ActivityIndicator size="large" color={theme.red} />
@@ -161,8 +198,10 @@ const Centered = styled.View`
   justify-content: center;
   align-items: center;
 `;
-
-
-
+const SearchContainer = styled.View`
+  padding: 8px 16px;
+  flex-direction: row;
+  align-items: center;
+`;
 
 export default Velibs;
