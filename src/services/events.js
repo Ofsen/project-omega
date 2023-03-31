@@ -20,7 +20,13 @@ export const getSingleEvent = eventId => {
   });
 };
 
-export const callApi = async (row = 20, start, commune) => {
+export const callApi = async (
+  row = 20,
+  start,
+  commune,
+  rentingFilter,
+  returningFilter,
+) => {
   const params = {
     row: row,
     start: start * row,
@@ -29,6 +35,12 @@ export const callApi = async (row = 20, start, commune) => {
 
   if (commune) {
     params['refine.nom_arrondissement_communes'] = commune;
+  }
+  if (rentingFilter) {
+    params['refine.is_renting'] = 'OUI';
+  }
+  if (returningFilter) {
+    params['refine.is_returning'] = 'OUI';
   }
   return await axios.get(`${API_URL}`, {params});
 };

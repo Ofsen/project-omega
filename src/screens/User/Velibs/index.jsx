@@ -7,6 +7,7 @@ import {useFocusEffect} from '@react-navigation/native';
 import {error} from '../../../utils/notifications';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Picker} from '@react-native-picker/picker';
+import {CheckBox} from 'react-native-elements';
 
 const Velibs = () => {
   const theme = useTheme();
@@ -17,12 +18,14 @@ const Velibs = () => {
 
   const [communes, setCommunes] = useState([]);
   const [selectedCommune, setSelectedCommune] = useState(null);
+  const [rentingFilter, setRentingFilter] = useState(false);
+  const [returningFilter, setReturningFilter] = useState(false);
 
   const size = 5;
 
   const fetchData = async () => {
     try {
-      const res = await callApi(size, page, selectedCommune);
+      const res = await callApi(size, page, selectedCommune, rentingFilter, returningFilter);
       if (res.status === 200) {
         setData(prev => [...prev, ...res.data.records]);
       }
@@ -67,6 +70,12 @@ const Velibs = () => {
     fetchCommunes();
   }, []);
 
+  const updateFilters = (renting, returning) => {
+    setRentingFilter(renting);
+    setReturningFilter(returning);
+    refreshData();
+  };
+
   const renderItem = ({item}) => {
     const fields = item.fields;
     const isRenting = fields.is_renting === "OUI";
@@ -104,24 +113,36 @@ const Velibs = () => {
   return (
     <UserLayout title="Velib">
       <SearchContainer>
-      <Picker
-        selectedValue={selectedCommune}
-        style={{flex: 1}}
-        onValueChange={(itemValue) => {
-          setSelectedCommune(itemValue);
-          setPage(0);
-          setData([]);
-        }}>
-        <Picker.Item label="Toutes les communes" value={null} />
-        {communes.map((commune, index) => (
-          <Picker.Item
-            key={index}
-            label={commune.name}
-            value={commune.name}
-          />
-        ))}
-      </Picker>
-    </SearchContainer>
+        <Picker
+          selectedValue={selectedCommune}
+          style={{flex: 1}}
+          onValueChange={(itemValue) => {
+            setSelectedCommune(itemValue);
+            setPage(0);
+            setData([]);
+          }}>
+          <Picker.Item label="Toutes les communes" value={null} />
+          {communes.map((commune, index) => (
+            <Picker.Item
+              key={index}
+              label={commune.name}
+              value={commune.name}
+            />
+          ))}
+        </Picker>
+      </SearchContainer>
+      <FilterContainer>
+        <CheckBox
+          title="Peut louer"
+          checked={rentingFilter}
+          onPress={() => updateFilters(!rentingFilter, returningFilter)}
+        />
+        <CheckBox
+          title="Peut retourner"
+          checked={returningFilter}
+          onPress={() => updateFilters(rentingFilter, !returningFilter)}
+        />
+      </FilterContainer>
       {loading ? (
         <Centered>
           <ActivityIndicator size="large" color={theme.red} />
@@ -202,6 +223,12 @@ const SearchContainer = styled.View`
   padding: 8px 16px;
   flex-direction: row;
   align-items: center;
+`;
+const FilterContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
 `;
 
 export default Velibs;
