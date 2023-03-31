@@ -26,6 +26,7 @@ export const callApi = async (
   commune,
   rentingFilter,
   returningFilter,
+  searchQuery,
 ) => {
   const params = {
     row: row,
@@ -41,6 +42,9 @@ export const callApi = async (
   }
   if (returningFilter) {
     params['refine.is_returning'] = 'OUI';
+  }
+  if (searchQuery) {
+    params.q = searchQuery;
   }
   return await axios.get(`${API_URL}`, {params});
 };

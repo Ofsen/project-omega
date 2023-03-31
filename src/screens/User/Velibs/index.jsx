@@ -6,8 +6,8 @@ import {callApi, getCommunes} from '../../../services/events';
 import {useFocusEffect} from '@react-navigation/native';
 import {error} from '../../../utils/notifications';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {Picker} from '@react-native-picker/picker';
-import {CheckBox} from 'react-native-elements';
+import {Button} from '../../../components/Button';
+import {Checkbox, Menu, Provider, Searchbar} from 'react-native-paper';
 
 const Velibs = () => {
   const theme = useTheme();
@@ -20,12 +20,14 @@ const Velibs = () => {
   const [selectedCommune, setSelectedCommune] = useState(null);
   const [rentingFilter, setRentingFilter] = useState(false);
   const [returningFilter, setReturningFilter] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [menuVisible, setMenuVisible] = useState(false);
 
   const size = 5;
 
   const fetchData = async () => {
     try {
-      const res = await callApi(size, page, selectedCommune, rentingFilter, returningFilter);
+      const res = await callApi(size, page, selectedCommune, rentingFilter, returningFilter, searchQuery);
       if (res.status === 200) {
         setData(prev => [...prev, ...res.data.records]);
       }
@@ -76,6 +78,17 @@ const Velibs = () => {
     refreshData();
   };
 
+  const onChangeSearch = (query) => {
+    setSearchQuery(query);
+    setData([]);
+    setPage(0);
+  };
+
+  /* useEffect(() => {
+    setPage(0);
+    setData([]);
+  }, [searchQuery]); */
+
   const renderItem = ({item}) => {
     const fields = item.fields;
     const isRenting = fields.is_renting === "OUI";
@@ -113,35 +126,55 @@ const Velibs = () => {
   return (
     <UserLayout title="Velib">
       <SearchContainer>
-        <Picker
-          selectedValue={selectedCommune}
-          style={{flex: 1}}
-          onValueChange={(itemValue) => {
-            setSelectedCommune(itemValue);
+        <Searchbar
+          placeholder="Rechercher"
+          onChangeText={onChangeSearch}
+          value={searchQuery}
+        />
+      </SearchContainer>
+      <SearchContainer>
+        <Menu
+          visible={menuVisible}
+          onDismiss={() => setMenuVisible(false)}
+          anchor={
+            <Button
+            label="Toutes les communes"
+            variant="blue"
+            pressHandler={() => setMenuVisible(true)}
+          />
+          }
+        >
+          <Menu.Item onPress={() => {
+            setSelectedCommune(null);
             setPage(0);
             setData([]);
-          }}>
-          <Picker.Item label="Toutes les communes" value={null} />
+            setMenuVisible(false);
+          }} title="Toutes les communes" />
           {communes.map((commune, index) => (
-            <Picker.Item
+            <Menu.Item
               key={index}
-              label={commune.name}
-              value={commune.name}
+              onPress={() => {
+                setSelectedCommune(commune.name);
+                setPage(0);
+                setData([]);
+                setMenuVisible(false);
+              }}
+              title={commune.name}
             />
           ))}
-        </Picker>
+        </Menu>
       </SearchContainer>
       <FilterContainer>
-        <CheckBox
-          title="Peut louer"
-          checked={rentingFilter}
-          onPress={() => updateFilters(!rentingFilter, returningFilter)}
-        />
-        <CheckBox
-          title="Peut retourner"
-          checked={returningFilter}
-          onPress={() => updateFilters(rentingFilter, !returningFilter)}
-        />
+      <Checkbox.Item
+        label="Louer"
+        status={rentingFilter ? 'checked' : 'unchecked'}
+        onPress={() => updateFilters(!rentingFilter, returningFilter)}
+      />
+      <Checkbox.Item
+        label="Retourner"
+        status={returningFilter ? 'checked' : 'unchecked'}
+        onPress={() => updateFilters(rentingFilter, !returningFilter)}
+      />
       </FilterContainer>
       {loading ? (
         <Centered>
@@ -231,4 +264,8 @@ const FilterContainer = styled.View`
   padding: 8px 16px;
 `;
 
-export default Velibs;
+export default () => (
+  <Provider>
+    <Velibs />
+  </Provider>
+);
