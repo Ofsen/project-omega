@@ -1,4 +1,3 @@
-import React from 'react';
 import axios from 'axios';
 import {DATA_API, API_URL} from '@env';
 

@@ -12,27 +12,24 @@ import {getSingleEvent} from '../../../../services/events';
 import moment from 'moment';
 import {Button} from '../../../../components/Button';
 import {error} from '../../../../utils/notifications';
+import { useSelector, useDispatch } from 'react-redux';
+
 
 const EventSingle = props => {
   const {route} = props;
   const theme = useTheme();
-  const [data, setData] = React.useState(null);
+  const data = useSelector(state => state.events.singleEvent);
   const [loading, setLoading] = React.useState(true);
 
-  const fetchData = async () => {
-    try {
-      const res = await getSingleEvent(route.params.eventId);
-      if (res.status === 200) {
-        setData(res.data.record);
-      }
-    } catch (err) {
-      error(err.message);
-    }
-    setLoading(false);
-  };
 
+  const dispatch = useDispatch();
+
+  const fetchData = () => {
+    dispatch(getSingleEvent(route.params.eventId));
+  };
   React.useEffect(() => {
     fetchData();
+    //dispatch(getSingleEvent());
   }, []);
 
   return loading ? (
