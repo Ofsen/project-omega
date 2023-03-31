@@ -1,23 +1,23 @@
 import React from 'react';
 import styled from 'styled-components';
 import {Button} from '../../../components/Button';
+import {useTranslation} from 'react-i18next';
 
 const Welcome = ({navigation}) => {
+  const {t} = useTranslation();
+
   return (
     <Container>
-      <TextHeader>Bienvenue!</TextHeader>
-      <CenteredText>
-        Connectez-vous ou inscrivez-vous et accédez aux meilleurs plans sur ce
-        qu'il faut faire dans Paris!
-      </CenteredText>
+      <TextHeader>{t('screen.welcome.header')}</TextHeader>
+      <CenteredText>{t('screen.welcome.text')}</CenteredText>
       <ButtonContainer>
         <Button
-          label="Se connecter"
+          label={t('misc.login')}
           pressHandler={() => navigation.navigate('Login')}
         />
         <Button
           outline
-          label="S'inscrire"
+          label={t('misc.register')}
           pressHandler={() => navigation.navigate('Signup')}
         />
       </ButtonContainer>

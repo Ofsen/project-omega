@@ -40,6 +40,10 @@ export const MainRoutes = () => {
     setTimeout(() => {
       setLoading(false);
     }, 2000);
+
+    return () => {
+      setLoading(true);
+    };
   }, []);
 
   return (

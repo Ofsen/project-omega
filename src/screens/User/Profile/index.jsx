@@ -8,11 +8,17 @@ import notifee from '@notifee/react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import messaging from '@react-native-firebase/messaging';
 import {error} from '../../../utils/notifications';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {toggleTheme} from '../../../actions/theme';
+import {useTranslation} from 'react-i18next';
+import {RadioButton} from 'react-native-paper';
+import {changeLanguage} from '../../../actions/lang';
 
 const Profile = () => {
   const {Logout, currentUser} = useAuth();
+  const {i18n} = useTranslation();
+
+  const lang = useSelector(state => state.lang.language);
   const dispatch = useDispatch();
 
   const initNotification = async () => {
@@ -94,6 +100,35 @@ const Profile = () => {
           variant="yellow"
           pressHandler={() => dispatch(toggleTheme())}
         />
+        <Button
+          label="Change language to French"
+          variant="black"
+          pressHandler={() => i18n.changeLanguage('fr')}
+        />
+
+        <Button
+          label="Change language to English"
+          variant="black"
+          pressHandler={() => i18n.changeLanguage('en')}
+        />
+        <RadioButton.Group
+          onValueChange={value => dispatch(changeLanguage(value))}
+          value={lang}>
+          <RadioButton.Item
+            labelStyle={{color: 'black'}}
+            color="black"
+            uncheckedColor="black"
+            label="English"
+            value="en"
+          />
+          <RadioButton.Item
+            labelStyle={{color: 'black'}}
+            color="black"
+            uncheckedColor="black"
+            label="French"
+            value="fr"
+          />
+        </RadioButton.Group>
       </ContentContainer>
     </UserLayout>
   );

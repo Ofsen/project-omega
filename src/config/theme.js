@@ -3,6 +3,7 @@ const defaultColors = {
   red: '#DF2935',
   yellow: '#FDCA40',
   white: '#fff',
+  black: '#080708',
 };
 
 export const darkTheme = {

@@ -8,11 +8,14 @@ import {Provider as PaperProvider} from 'react-native-paper';
 import Profile from './Profile';
 import HomeStack from './Home/HomeStack';
 import Favorites from './Favorites';
+import {useTranslation} from 'react-i18next';
 
 const Tab = createMaterialBottomTabNavigator();
 
 const UserStack = () => {
   const theme = useTheme();
+  const {t} = useTranslation();
+
   return (
     <PaperProvider
       theme={{
@@ -51,9 +54,27 @@ const UserStack = () => {
           headerShown: false,
           tabBarShowLabel: false,
         })}>
-        <Tab.Screen name="Home" component={HomeStack} />
-        <Tab.Screen name="Favorites" component={Favorites} />
-        <Tab.Screen name="Profile" component={Profile} />
+        <Tab.Screen
+          options={{
+            tabBarLabel: t('misc.home'),
+          }}
+          name="Home"
+          component={HomeStack}
+        />
+        <Tab.Screen
+          options={{
+            tabBarLabel: t('misc.favorites'),
+          }}
+          name="Favorites"
+          component={Favorites}
+        />
+        <Tab.Screen
+          options={{
+            tabBarLabel: t('misc.profile'),
+          }}
+          name="Profile"
+          component={Profile}
+        />
       </Tab.Navigator>
     </PaperProvider>
   );
