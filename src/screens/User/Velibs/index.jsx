@@ -7,6 +7,7 @@ import {Event} from '../../../../components/Event';
 import {useFocusEffect} from '@react-navigation/native';
 import {error} from '../../../utils/notifications';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {Share} from 'react-native';
 
 const Velibs = () => {
   const theme = useTheme();
@@ -15,6 +16,7 @@ const Velibs = () => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [available, setAvailable] = React.useState(false);
+  const [location, setLocation] = useState(null);
 
   const size = 5;
 
@@ -49,10 +51,27 @@ const Velibs = () => {
     }, []),
   );
 
+  useEffect(() => {
+    const fields = {};
+    setLocation(`${fields.latitude},${fields.longitude}`);
+  }, []);
+
+  const handleShareLocation = () => {
+    if (location) {
+      const url = `https://www.google.com/maps/search/?api=1&query=${location.latitude},${location.longitude}`
+      Share.share({
+        message: url,
+        title: 'Location',
+        url: url,
+      });
+    }
+  };
+
   const renderItem = ({item}) => {
     const fields = item.fields;
     const isRenting = fields.is_renting === "OUI";
     const isReturning = fields.is_returning === "OUI";
+
     return (
       <StationItem>
         <InfoContainer>
@@ -79,6 +98,9 @@ const Velibs = () => {
           <Text>{fields.numdocksavailable} Mechaniques</Text>
           <Text>{fields.capacity} Capacité</Text>
         </TextContainer>
+        <Button onPress={handleShareLocation}>
+        <Icon name="share" size={24} color="black" />
+      </Button>
       </StationItem>
     );
   };
@@ -162,6 +184,12 @@ const Centered = styled.View`
   align-items: center;
 `;
 
+const Button = styled.TouchableOpacity`
+  background-color: ${({theme}) => theme.primary};
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 70px;
+`;
 
 
 
