@@ -109,6 +109,16 @@ const Velibs = () => {
               </Centered>
             )
           }
+          ListFooterComponent={() => {
+            if (data.length > 0) {
+              return (
+                <Centered>
+                  <ActivityIndicator size="large" color={theme.red} />
+                </Centered>
+              );
+            }
+            return null;
+          }}
         />
       </ContentContainer>
       )}
