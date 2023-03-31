@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import {DATA_API} from '@env';
+import {DATA_API, API_URL} from '@env';
 
 export const getPaginatedEvents = (limit = 20, offset) => {
   return axios.get(`${DATA_API}`, {
@@ -15,6 +15,16 @@ export const getPaginatedEvents = (limit = 20, offset) => {
 export const getSingleEvent = eventId => {
   return axios.get(`${DATA_API}/${eventId}`, {
     params: {
+      timezone: 'Europe/Paris',
+    },
+  });
+};
+
+export const callApi = async (row = 20, start) => {
+  return await axios.get(`${API_URL}`, {
+    params: {
+      row: row,
+      start: start * row,
       timezone: 'Europe/Paris',
     },
   });
