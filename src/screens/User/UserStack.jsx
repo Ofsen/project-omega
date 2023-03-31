@@ -9,6 +9,7 @@ import Profile from './Profile';
 import HomeStack from './Home/HomeStack';
 import Favorites from './Favorites';
 import {useTranslation} from 'react-i18next';
+import Velibs from './Velibs';
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -39,6 +40,9 @@ const UserStack = () => {
               case 'Home':
                 iconName = focused ? 'home' : 'home-outline';
                 break;
+              case 'Velib':
+                iconName = focused ? 'bicycle' : 'bicycle-outline';
+                break;
               case 'Favorites':
                 iconName = focused ? 'ios-heart' : 'ios-heart-outline';
                 break;
@@ -61,6 +65,7 @@ const UserStack = () => {
           name="Home"
           component={HomeStack}
         />
+        <Tab.Screen name="Velib" component={Velibs} />
         <Tab.Screen
           options={{
             tabBarLabel: t('misc.favorites'),
