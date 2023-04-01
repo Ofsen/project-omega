@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {useAuth} from '../../../contexts/authContext';
 import TextField from '../../../components/Forms/TextField';
 import {Button} from '../../../components/Button';
@@ -8,18 +8,23 @@ import notifee from '@notifee/react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import messaging from '@react-native-firebase/messaging';
 import {error} from '../../../utils/notifications';
-import {useDispatch, useSelector} from 'react-redux';
-import {toggleTheme} from '../../../actions/theme';
+import {useDispatch} from 'react-redux';
+import {toggleTheme} from '../../../actions';
 import {useTranslation} from 'react-i18next';
-import {RadioButton} from 'react-native-paper';
-import {changeLanguage} from '../../../actions/lang';
+import {RadioButton, Text} from 'react-native-paper';
 
 const Profile = () => {
   const {Logout, currentUser} = useAuth();
   const {i18n} = useTranslation();
+  const [lang, setLang] = useState(i18n.language);
 
-  const lang = useSelector(state => state.lang.language);
   const dispatch = useDispatch();
+
+  const changeLanguage = async lng => {
+    i18n.changeLanguage(lng);
+    setLang(lng);
+    await AsyncStorage.setItem('lng', lng);
+  };
 
   const initNotification = async () => {
     try {
@@ -100,20 +105,10 @@ const Profile = () => {
           variant="yellow"
           pressHandler={() => dispatch(toggleTheme())}
         />
-        <Button
-          label="Change language to French"
-          variant="black"
-          pressHandler={() => i18n.changeLanguage('fr')}
-        />
-
-        <Button
-          label="Change language to English"
-          variant="black"
-          pressHandler={() => i18n.changeLanguage('en')}
-        />
         <RadioButton.Group
-          onValueChange={value => dispatch(changeLanguage(value))}
+          onValueChange={value => changeLanguage(value)}
           value={lang}>
+          <Text style={{color: 'black'}}>Language</Text>
           <RadioButton.Item
             labelStyle={{color: 'black'}}
             color="black"
