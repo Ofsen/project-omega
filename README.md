@@ -9,10 +9,10 @@ Une application qui liste les différentes bornes electriques pour les vehicules
 - Partager la position d'une borne electrique
 - Detection et changement de la langue
 - Detection et changement du theme 
-- Ajouter une borne en favoris
 
 
 ## Pour le 20
 - Affichage de la borne la plus proche de l'utilisateur (en fonction de sa position GPS)
 - notification lors du changement de disponibilité
 - Google MAPS
+- Ajouter une borne en favoris
