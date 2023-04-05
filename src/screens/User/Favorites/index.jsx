@@ -6,9 +6,11 @@ import styled, {useTheme} from 'styled-components';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {error} from '../../../utils/notifications';
+import {useTranslation} from 'react-i18next';
 
 const Favorites = () => {
   const theme = useTheme();
+  const {t} = useTranslation();
   const navigation = useNavigation();
   const [data, setData] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
@@ -82,7 +84,7 @@ const Favorites = () => {
           refreshing={refreshing}
           ListEmptyComponent={() => (
             <Centered>
-              <Text>Aucun evenement trouvé</Text>
+              <Text>{t('screen.events.noevents')}</Text>
             </Centered>
           )}
         />

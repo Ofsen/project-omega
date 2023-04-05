@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {AuthProvider} from './src/contexts/authContext';
 import {MainRoutes} from './src/config/MainRoutes';
 import {ThemeProvider} from 'styled-components';
@@ -13,7 +13,7 @@ import {persistor, store} from './src/config/store';
 import {useSelector} from 'react-redux';
 
 const EntryPoint = () => {
-  const theme = useSelector(state => state.theme.storedTheme);
+  const theme = useSelector(state => state.settings.theme);
 
   return (
     <ThemeProvider theme={theme === 'light' ? lightTheme : darkTheme}>
