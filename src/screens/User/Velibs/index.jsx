@@ -6,6 +6,7 @@ import {callApi} from '../../../services/events';
 import {useFocusEffect} from '@react-navigation/native';
 import {error} from '../../../utils/notifications';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {Share} from 'react-native';
 import {useTranslation} from 'react-i18next';
 
 const Velibs = () => {
@@ -15,6 +16,8 @@ const Velibs = () => {
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [available, setAvailable] = React.useState(false);
+  const [location, setLocation] = useState(null);
 
   const size = 5;
 
@@ -49,10 +52,27 @@ const Velibs = () => {
     }, []),
   );
 
+  useEffect(() => {
+    const fields = {};
+    setLocation(`${fields.latitude},${fields.longitude}`);
+  }, []);
+
+  const handleShareLocation = () => {
+    if (location) {
+      const url = `https://www.google.com/maps/search/?api=1&query=${location.latitude},${location.longitude}`
+      Share.share({
+        message: url,
+        title: 'Location',
+        url: url,
+      });
+    }
+  };
+
   const renderItem = ({item}) => {
     const fields = item.fields;
     const isRenting = fields.is_renting === 'OUI';
     const isReturning = fields.is_returning === 'OUI';
+
     return (
       <StationItem>
         <InfoContainer>
@@ -85,6 +105,9 @@ const Velibs = () => {
             {fields.capacity} {t('screen.velibs.capacity')}
           </Text>
         </TextContainer>
+        <Button onPress={handleShareLocation}>
+        <Icon name="share" size={24} color="black" />
+      </Button>
       </StationItem>
     );
   };
@@ -166,6 +189,13 @@ const Centered = styled.View`
   flex: 1;
   justify-content: center;
   align-items: center;
+`;
+
+const Button = styled.TouchableOpacity`
+  background-color: ${({theme}) => theme.primary};
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 70px;
 `;
 
 export default Velibs;
