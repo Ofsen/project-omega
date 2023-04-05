@@ -7,7 +7,8 @@ Une application qui liste les différentes bornes electriques pour les vehicules
 - Filter des bornes electriques
 - Afficher la disponibilité des bornes electriques en temps réel
 - Partager la position d'une borne electrique
-- Changez de langue
+- Detection et changement de la langue
+- Detection et changement du theme 
 - Ajouter une borne en favoris
 
 

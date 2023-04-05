@@ -1,25 +1,31 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {useAuth} from '../../../contexts/authContext';
 import TextField from '../../../components/Forms/TextField';
 import {Button} from '../../../components/Button';
 import {UserLayout} from '../../../components/layout/UserLayout';
-import styled from 'styled-components';
+import styled, {useTheme} from 'styled-components';
 import notifee from '@notifee/react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import messaging from '@react-native-firebase/messaging';
 import {error} from '../../../utils/notifications';
-import {useDispatch, useSelector} from 'react-redux';
-import {toggleTheme} from '../../../actions/theme';
-import {useTranslation} from 'react-i18next';
+import {useDispatch} from 'react-redux';
+import {toggleTheme} from '../../../actions';
 import {RadioButton} from 'react-native-paper';
-import {changeLanguage} from '../../../actions/lang';
+import {useTranslation} from 'react-i18next';
 
 const Profile = () => {
   const {Logout, currentUser} = useAuth();
-  const {i18n} = useTranslation();
+  const theme = useTheme();
+  const {i18n, t} = useTranslation();
+  const [lang, setLang] = useState(i18n.language);
 
-  const lang = useSelector(state => state.lang.language);
   const dispatch = useDispatch();
+
+  const changeLanguage = async lng => {
+    i18n.changeLanguage(lng);
+    setLang(lng);
+    await AsyncStorage.setItem('lng', lng);
+  };
 
   const initNotification = async () => {
     try {
@@ -82,12 +88,16 @@ const Profile = () => {
   );
 
   return (
-    <UserLayout title="Profile">
+    <UserLayout title={t('screen.profile.title')}>
       <ContentContainer>
-        <TextField label="Email" value={currentUser.email} disabled />
-        <Button variant="red" label="Logout" pressHandler={() => Logout()} />
+        <TextField label={t('misc.email')} value={currentUser.email} disabled />
         <Button
-          label="Notify me"
+          variant="red"
+          label={t('misc.logout')}
+          pressHandler={() => Logout()}
+        />
+        <Button
+          label={t('misc.notifyme')}
           pressHandler={() =>
             onDisplayNotification(
               'Notification Title',
@@ -96,36 +106,26 @@ const Profile = () => {
           }
         />
         <Button
-          label="Toggle theme"
+          label={t('misc.toggletheme')}
           variant="yellow"
           pressHandler={() => dispatch(toggleTheme())}
         />
-        <Button
-          label="Change language to French"
-          variant="black"
-          pressHandler={() => i18n.changeLanguage('fr')}
-        />
-
-        <Button
-          label="Change language to English"
-          variant="black"
-          pressHandler={() => i18n.changeLanguage('en')}
-        />
         <RadioButton.Group
-          onValueChange={value => dispatch(changeLanguage(value))}
+          onValueChange={value => changeLanguage(value)}
           value={lang}>
+          <LangHeader>{t('misc.language')}</LangHeader>
           <RadioButton.Item
-            labelStyle={{color: 'black'}}
-            color="black"
-            uncheckedColor="black"
-            label="English"
+            labelStyle={{color: theme.color}}
+            color={theme.color}
+            uncheckedColor={theme.color}
+            label={t('misc.english')}
             value="en"
           />
           <RadioButton.Item
-            labelStyle={{color: 'black'}}
-            color="black"
-            uncheckedColor="black"
-            label="French"
+            labelStyle={{color: theme.color}}
+            color={theme.color}
+            uncheckedColor={theme.color}
+            label={t('misc.french')}
             value="fr"
           />
         </RadioButton.Group>
@@ -140,4 +140,8 @@ const ContentContainer = styled.View`
   flex: 1;
   padding: 0 16px;
   gap: 16px;
+`;
+
+const LangHeader = styled.Text`
+  color: ${({theme}) => theme.color};
 `;

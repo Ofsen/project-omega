@@ -1,14 +1,15 @@
 import React from 'react';
-import {Pressable, Text, View} from 'react-native';
+import {Pressable, View} from 'react-native';
 import styled from 'styled-components';
 import {Button} from '../../Button';
 import TextField from '../TextField';
 import {useNavigation} from '@react-navigation/native';
-import {auth} from '../../../config/firebase';
 import {useAuth} from '../../../contexts/authContext';
+import {useTranslation} from 'react-i18next';
 
 const LoginForm = () => {
   const navigation = useNavigation();
+  const {t} = useTranslation();
   const {Login} = useAuth();
   const [form, setForm] = React.useState({email: '', password: '', error: ''});
 
@@ -36,24 +37,24 @@ const LoginForm = () => {
         </ErrorContainer>
       )}
       <TextField
-        label="Email"
+        label={t('misc.email')}
         placeholder="user123@mail.com"
         keyboardType="email-address"
         change={text => setForm(prev => ({...prev, email: text}))}
         value={form.email}
       />
       <TextField
-        label="Mot de passe"
+        label={t('misc.password')}
         placeholder="***"
         type="password"
         change={text => setForm(prev => ({...prev, password: text}))}
         value={form.password}
       />
       <View style={{marginTop: 12}}>
-        <Button label="Se connecter" pressHandler={handleLogin} />
+        <Button label={t('misc.login')} pressHandler={handleLogin} />
       </View>
       <Pressable onPress={() => navigation.navigate('Signup')}>
-        <LinkText>Pas encore inscrit ? s'inscrire</LinkText>
+        <LinkText>{t('misc.notregisteredinyet')}</LinkText>
       </Pressable>
     </FormContainer>
   );

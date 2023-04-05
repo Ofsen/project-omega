@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import Icon from 'react-native-vector-icons/Octicons';
-import {View} from 'react-native';
 
 const Touchable = styled.Pressable`
   width: 100%;

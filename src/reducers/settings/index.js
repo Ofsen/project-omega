@@ -1,5 +1,5 @@
 import {combineReducers} from 'redux';
 
 export default combineReducers({
-  settings: require('./settings').default,
+  theme: require('./theme').default,
 });

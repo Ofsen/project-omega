@@ -6,9 +6,11 @@ import {getPaginatedEvents} from '../../../../services/events';
 import {Event} from '../../../../components/Event';
 import {useFocusEffect} from '@react-navigation/native';
 import {error} from '../../../../utils/notifications';
+import {useTranslation} from 'react-i18next';
 
 const EventList = () => {
   const theme = useTheme();
+  const {t} = useTranslation();
   const [data, setData] = useState([]);
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -48,7 +50,7 @@ const EventList = () => {
   }, [page]);
 
   return (
-    <UserLayout title="Accueil">
+    <UserLayout title={t('misc.home')}>
       {loading ? (
         <Centered>
           <ActivityIndicator size="large" color={theme.red} />
@@ -80,7 +82,7 @@ const EventList = () => {
           ListEmptyComponent={() =>
             !refreshing && (
               <Centered>
-                <Text>Aucun evenement trouvé</Text>
+                <Text>{t('screen.events.noevents')}</Text>
               </Centered>
             )
           }
