@@ -3,18 +3,19 @@ import {useAuth} from '../../../contexts/authContext';
 import TextField from '../../../components/Forms/TextField';
 import {Button} from '../../../components/Button';
 import {UserLayout} from '../../../components/layout/UserLayout';
-import styled from 'styled-components';
+import styled, {useTheme} from 'styled-components';
 import notifee from '@notifee/react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import messaging from '@react-native-firebase/messaging';
 import {error} from '../../../utils/notifications';
 import {useDispatch} from 'react-redux';
 import {toggleTheme} from '../../../actions';
+import {RadioButton} from 'react-native-paper';
 import {useTranslation} from 'react-i18next';
-import {RadioButton, Text} from 'react-native-paper';
 
 const Profile = () => {
   const {Logout, currentUser} = useAuth();
+  const theme = useTheme();
   const {i18n, t} = useTranslation();
   const [lang, setLang] = useState(i18n.language);
 
@@ -87,7 +88,7 @@ const Profile = () => {
   );
 
   return (
-    <UserLayout title="Profile">
+    <UserLayout title={t('screen.profile.title')}>
       <ContentContainer>
         <TextField label={t('misc.email')} value={currentUser.email} disabled />
         <Button
@@ -112,18 +113,18 @@ const Profile = () => {
         <RadioButton.Group
           onValueChange={value => changeLanguage(value)}
           value={lang}>
-          <Text style={{color: 'black'}}>{t('misc.language')}</Text>
+          <LangHeader>{t('misc.language')}</LangHeader>
           <RadioButton.Item
-            labelStyle={{color: 'black'}}
-            color="black"
-            uncheckedColor="black"
+            labelStyle={{color: theme.color}}
+            color={theme.color}
+            uncheckedColor={theme.color}
             label={t('misc.english')}
             value="en"
           />
           <RadioButton.Item
-            labelStyle={{color: 'black'}}
-            color="black"
-            uncheckedColor="black"
+            labelStyle={{color: theme.color}}
+            color={theme.color}
+            uncheckedColor={theme.color}
             label={t('misc.french')}
             value="fr"
           />
@@ -139,4 +140,8 @@ const ContentContainer = styled.View`
   flex: 1;
   padding: 0 16px;
   gap: 16px;
+`;
+
+const LangHeader = styled.Text`
+  color: ${({theme}) => theme.color};
 `;

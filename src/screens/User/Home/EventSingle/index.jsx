@@ -5,10 +5,12 @@ import {getSingleEvent} from '../../../../services/events';
 import moment from 'moment';
 import {Button} from '../../../../components/Button';
 import {error} from '../../../../utils/notifications';
+import {useTranslation} from 'react-i18next';
 
 const EventSingle = props => {
   const {route} = props;
   const theme = useTheme();
+  const {t} = useTranslation();
   const [data, setData] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
 

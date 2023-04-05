@@ -23,6 +23,12 @@ module.exports = {
         dock: 'Dock',
         rent: 'Louer',
       },
+      favorites: {
+        title: 'Favoris',
+      },
+      profile: {
+        title: 'Profil',
+      },
     },
     misc: {
       login: 'Se connecter',

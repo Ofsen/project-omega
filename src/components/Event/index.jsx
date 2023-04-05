@@ -5,10 +5,12 @@ import styled from 'styled-components';
 import Icon from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {error} from '../../utils/notifications';
+import {useTranslation} from 'react-i18next';
 
 export const Event = props => {
   const {id, title, leadText, dateStart, dateEnd, coverUrl, tags} = props;
   const navigation = useNavigation();
+  const {t} = useTranslation();
   const [favorite, setFavorite] = React.useState(false);
 
   const fetchFavorited = async () => {
