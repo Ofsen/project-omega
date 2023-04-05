@@ -15,7 +15,7 @@ import {RadioButton, Text} from 'react-native-paper';
 
 const Profile = () => {
   const {Logout, currentUser} = useAuth();
-  const {i18n} = useTranslation();
+  const {i18n, t} = useTranslation();
   const [lang, setLang] = useState(i18n.language);
 
   const dispatch = useDispatch();
@@ -89,10 +89,14 @@ const Profile = () => {
   return (
     <UserLayout title="Profile">
       <ContentContainer>
-        <TextField label="Email" value={currentUser.email} disabled />
-        <Button variant="red" label="Logout" pressHandler={() => Logout()} />
+        <TextField label={t('misc.email')} value={currentUser.email} disabled />
         <Button
-          label="Notify me"
+          variant="red"
+          label={t('misc.logout')}
+          pressHandler={() => Logout()}
+        />
+        <Button
+          label={t('misc.notifyme')}
           pressHandler={() =>
             onDisplayNotification(
               'Notification Title',
@@ -101,26 +105,26 @@ const Profile = () => {
           }
         />
         <Button
-          label="Toggle theme"
+          label={t('misc.toggletheme')}
           variant="yellow"
           pressHandler={() => dispatch(toggleTheme())}
         />
         <RadioButton.Group
           onValueChange={value => changeLanguage(value)}
           value={lang}>
-          <Text style={{color: 'black'}}>Language</Text>
+          <Text style={{color: 'black'}}>{t('misc.language')}</Text>
           <RadioButton.Item
             labelStyle={{color: 'black'}}
             color="black"
             uncheckedColor="black"
-            label="English"
+            label={t('misc.english')}
             value="en"
           />
           <RadioButton.Item
             labelStyle={{color: 'black'}}
             color="black"
             uncheckedColor="black"
-            label="French"
+            label={t('misc.french')}
             value="fr"
           />
         </RadioButton.Group>

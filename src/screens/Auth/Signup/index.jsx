@@ -1,11 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
 import SignUpForm from '../../../components/Forms/SignUpForm';
+import {useTranslation} from 'react-i18next';
 
 const Signup = () => {
+  const {t} = useTranslation();
+
   return (
     <Container>
-      <TextHeader>S'inscrire</TextHeader>
+      <TextHeader>{t('misc.register')}</TextHeader>
       <SignUpForm />
     </Container>
   );

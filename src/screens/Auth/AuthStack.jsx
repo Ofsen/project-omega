@@ -5,11 +5,14 @@ import {useTheme} from 'styled-components';
 import Login from './Login';
 import Signup from './Signup';
 import Welcome from './Welcome';
+import {useTranslation} from 'react-i18next';
 
 const Stack = createNativeStackNavigator();
 
 const AuthStack = () => {
   const theme = useTheme();
+  const {t} = useTranslation();
+
   return (
     <Stack.Navigator
       screenOptions={{
@@ -29,10 +32,16 @@ const AuthStack = () => {
         name="Welcome"
         component={Welcome}
       />
-      <Stack.Screen name="Login" component={Login} />
       <Stack.Screen
         options={{
-          title: "S'inscrire",
+          title: t('misc.login'),
+        }}
+        name="Login"
+        component={Login}
+      />
+      <Stack.Screen
+        options={{
+          title: t('misc.register'),
         }}
         name="Signup"
         component={Signup}

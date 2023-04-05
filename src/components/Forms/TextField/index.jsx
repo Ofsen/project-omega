@@ -1,5 +1,5 @@
 import React from 'react';
-import styled, {useTheme} from 'styled-components';
+import styled from 'styled-components';
 
 const FieldContainer = styled.View`
   gap: 4px;
@@ -26,7 +26,6 @@ const TextField = props => {
     disabled = false,
     variant = 'secondaryBackground',
   } = props;
-  const theme = useTheme();
 
   return (
     <FieldContainer>

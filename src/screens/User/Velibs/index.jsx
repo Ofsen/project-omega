@@ -3,18 +3,18 @@ import styled, {useTheme} from 'styled-components';
 import {ActivityIndicator, FlatList, Text} from 'react-native';
 import {UserLayout} from '../../../components/layout/UserLayout';
 import {callApi} from '../../../services/events';
-import {Event} from '../../../../components/Event';
 import {useFocusEffect} from '@react-navigation/native';
 import {error} from '../../../utils/notifications';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {useTranslation} from 'react-i18next';
 
 const Velibs = () => {
   const theme = useTheme();
+  const {t} = useTranslation();
   const [data, setData] = useState([]);
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [available, setAvailable] = React.useState(false);
 
   const size = 5;
 
@@ -51,33 +51,39 @@ const Velibs = () => {
 
   const renderItem = ({item}) => {
     const fields = item.fields;
-    const isRenting = fields.is_renting === "OUI";
-    const isReturning = fields.is_returning === "OUI";
+    const isRenting = fields.is_renting === 'OUI';
+    const isReturning = fields.is_returning === 'OUI';
     return (
       <StationItem>
         <InfoContainer>
-        <IconRow>
-          <Icon
-            name={isRenting ? 'checkmark-circle' : 'close-circle'}
-            size={28}
-            color={isRenting ? 'green' : 'red'}
-          />
-          <Text>Rent</Text>
+          <IconRow>
+            <Icon
+              name={isRenting ? 'checkmark-circle' : 'close-circle'}
+              size={28}
+              color={isRenting ? 'green' : 'red'}
+            />
+            <Text>{t('screen.velibs.rent')}</Text>
           </IconRow>
           <IconRow>
-          <Icon
-            name={isReturning ? 'checkmark-circle' : 'close-circle'}
-            size={28}
-            color={isReturning ? 'green' : 'red'}
-          />
-          <Text>Dock</Text>
+            <Icon
+              name={isReturning ? 'checkmark-circle' : 'close-circle'}
+              size={28}
+              color={isReturning ? 'green' : 'red'}
+            />
+            <Text>{t('screen.velibs.dock')}</Text>
           </IconRow>
         </InfoContainer>
         <TextContainer>
           <Station>{fields.name}</Station>
-          <Text>{fields.numbikesavailable} Ebikes</Text>
-          <Text>{fields.numdocksavailable} Mechaniques</Text>
-          <Text>{fields.capacity} Capacité</Text>
+          <Text>
+            {fields.numbikesavailable} {t('screen.velibs.ebikes')}
+          </Text>
+          <Text>
+            {fields.numdocksavailable} {t('screen.velibs.mechanical')}
+          </Text>
+          <Text>
+            {fields.capacity} {t('screen.velibs.capacity')}
+          </Text>
         </TextContainer>
       </StationItem>
     );
@@ -90,37 +96,37 @@ const Velibs = () => {
           <ActivityIndicator size="large" color={theme.red} />
         </Centered>
       ) : (
-      <ContentContainer>
-        <FlatList
-          data={data}
-          renderItem={renderItem}
-          keyExtractor={(item, index) => item.recordid + '_' + index}
-          onEndReached={() => {
-            setPage(prev => page + 1);
-          }}
-          onRefresh={() => {
-            refreshData();
-          }}
-          refreshing={refreshing}
-          ListEmptyComponent={() =>
-            !refreshing && (
-              <Centered>
-                <Text>Aucun evenement trouvé</Text>
-              </Centered>
-            )
-          }
-          ListFooterComponent={() => {
-            if (data.length > 0) {
-              return (
+        <ContentContainer>
+          <FlatList
+            data={data}
+            renderItem={renderItem}
+            keyExtractor={(item, index) => item.recordid + '_' + index}
+            onEndReached={() => {
+              setPage(prev => page + 1);
+            }}
+            onRefresh={() => {
+              refreshData();
+            }}
+            refreshing={refreshing}
+            ListEmptyComponent={() =>
+              !refreshing && (
                 <Centered>
-                  <ActivityIndicator size="large" color={theme.red} />
+                  <Text>{t('screen.events.noevents')}</Text>
                 </Centered>
-              );
+              )
             }
-            return null;
-          }}
-        />
-      </ContentContainer>
+            ListFooterComponent={() => {
+              if (data.length > 0) {
+                return (
+                  <Centered>
+                    <ActivityIndicator size="large" color={theme.red} />
+                  </Centered>
+                );
+              }
+              return null;
+            }}
+          />
+        </ContentContainer>
       )}
     </UserLayout>
   );
@@ -133,7 +139,7 @@ const ContentContainer = styled.View`
 `;
 
 const StationItem = styled.View`
-  background-color: ${({theme}) => theme.secondaryBackground };
+  background-color: ${({theme}) => theme.secondaryBackground};
   padding: 20px;
   margin-bottom: 20px;
   flex-direction: row;
@@ -161,8 +167,5 @@ const Centered = styled.View`
   justify-content: center;
   align-items: center;
 `;
-
-
-
 
 export default Velibs;

@@ -67,8 +67,11 @@ export const Event = props => {
         <LeadingText>{leadText}</LeadingText>
         <DateContainer>
           <Date>
-            Du {moment(dateStart).format('DD-MM-YYYY')} au{' '}
-            {moment(dateEnd).format('DD-MM-YYYY')}
+            {`${t('screen.events.from')} ${moment(dateStart).format(
+              'DD-MM-YYYY',
+            )} ${t('screen.events.to')} ${moment(dateEnd).format(
+              'DD-MM-YYYY',
+            )}`}
           </Date>
         </DateContainer>
       </ContentContainer>

@@ -1,13 +1,6 @@
 import React from 'react';
 import styled, {useTheme} from 'styled-components';
-import {
-  View,
-  Text,
-  ActivityIndicator,
-  Image,
-  ScrollView,
-  Linking,
-} from 'react-native';
+import {Text, ActivityIndicator, ScrollView, Linking} from 'react-native';
 import {getSingleEvent} from '../../../../services/events';
 import moment from 'moment';
 import {Button} from '../../../../components/Button';
@@ -41,7 +34,7 @@ const EventSingle = props => {
     </Centered>
   ) : data === null ? (
     <Centered>
-      <Text>No data found</Text>
+      <Text>{t('screen.events.nodata')}</Text>
     </Centered>
   ) : (
     <ScrollView>
@@ -49,21 +42,24 @@ const EventSingle = props => {
       <ContentContainer>
         <Title>{data.fields.title}</Title>
         <Paragraph>{data.fields.lead_text}</Paragraph>
-        <Subtitle>Description</Subtitle>
+        <Subtitle>{t('screen.events.description')}</Subtitle>
         <Paragraph>
           {data.fields.description.replace(/<(.|\n)*?>/g, '')}
         </Paragraph>
-        <Subtitle>Pour Qui?</Subtitle>
+        <Subtitle>{t('screen.events.forwho')}</Subtitle>
         <Paragraph>{data.fields.audience}</Paragraph>
-        <Subtitle>Quand?</Subtitle>
+        <Subtitle>{t('screen.events.when')}</Subtitle>
         <Date>
-          Du {moment(data.fields.date_start).format('DD-MM-YYYY')} au{' '}
-          {moment(data.fields.date_end).format('DD-MM-YYYY')}
+          {`${t('screen.events.from')} ${moment(data.fields.date_start).format(
+            'DD-MM-YYYY',
+          )} ${t('screen.events.to')} ${moment(data.fields.date_end).format(
+            'DD-MM-YYYY',
+          )}`}
         </Date>
-        <Subtitle>Où?</Subtitle>
+        <Subtitle>{t('screen.events.where')}</Subtitle>
         <Paragraph>{data.fields.address_name}</Paragraph>
         <Paragraph>{`${data.fields.address_street}, ${data.fields.address_zipcode} ${data.fields.address_city}`}</Paragraph>
-        <Subtitle>Liens</Subtitle>
+        <Subtitle>{t('screen.events.links')}</Subtitle>
         <Button
           label={data.fields.access_link_text || 'Voir plus'}
           icon="link-external"
