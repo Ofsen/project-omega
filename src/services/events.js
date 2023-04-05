@@ -32,6 +32,12 @@ export const callApi = async (
     row: row,
     start: start * row,
     timezone: 'Europe/Paris',
+    q: '',
+    refine: {
+      nom_arrondissement_communes: '',
+      is_renting: '',
+      is_returning: '',
+    },
   };
 
   if (commune) {
@@ -46,7 +52,11 @@ export const callApi = async (
   if (searchQuery) {
     params.q = searchQuery;
   }
-  return await axios.get(`${API_URL}`, {params});
+
+  console.log(start, params.start);
+  const a = await axios.get(`${API_URL}`, {params});
+  console.log('pipipoupou', a);
+  return a;
 };
 
 export const getCommunes = async () => {

@@ -29,6 +29,7 @@ const Velibs = () => {
     try {
       const res = await callApi(size, page, selectedCommune, rentingFilter, returningFilter, searchQuery);
       if (res.status === 200) {
+        console.log("logs", res.data.records);
         setData(prev => [...prev, ...res.data.records]);
       }
     } catch (err) {
@@ -78,16 +79,24 @@ const Velibs = () => {
     refreshData();
   };
 
-  const onChangeSearch = (query) => {
-    setSearchQuery(query);
+  const onChangeSearch = () => {
     setData([]);
     setPage(0);
   };
 
-  /* useEffect(() => {
-    setPage(0);
-    setData([]);
-  }, [searchQuery]); */
+  const searchData = async () => {
+    try {
+      setData([]);
+      const res = await callApi(size, 0, selectedCommune, rentingFilter, returningFilter, searchQuery);
+      if (res.status === 200) {
+        console.log("logs", res.data.records);
+        setData(prev => [...prev, ...res.data.records]);
+      }
+    } catch (err) {
+      error(err.message);
+    }
+    if (page === 0) setLoading(false);
+  };
 
   const renderItem = ({item}) => {
     const fields = item.fields;
@@ -128,10 +137,16 @@ const Velibs = () => {
       <SearchContainer>
         <Searchbar
           placeholder="Rechercher"
-          onChangeText={onChangeSearch}
+          onChangeText={setSearchQuery}
           value={searchQuery}
+          onClearIconPress={() => {setData([]), setPage(0)}}
         />
+        
       </SearchContainer>
+      <Button
+          label="OK"
+          pressHandler={() => searchData()}
+        />
       <SearchContainer>
         <Menu
           visible={menuVisible}
