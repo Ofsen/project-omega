@@ -1,8 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 import LoginForm from '../../../components/Forms/LoginForm';
+import {useTranslation} from 'react-i18next';
 
 const Login = () => {
+  const {t} = useTranslation();
   return (
     <Container>
       <TextHeader>{t('misc.login')}</TextHeader>
