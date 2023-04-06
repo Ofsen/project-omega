@@ -18,7 +18,7 @@ Une application qui liste les différentes bornes electriques pour les vehicules
 - [ ]  Google MAPS
 - [ ]  Ajouter une borne en favoris
 
-## Bonus
+## Fonctions
 - [x]  Have a router
 - [x]  Have an authentication system
 - [x]  Use styled-components
@@ -33,6 +33,8 @@ Une application qui liste les différentes bornes electriques pour les vehicules
 - [x]  Multilingual system
 - [x]  Make some animations
 - [x]  Share something in your app (react-native-share)
+
+## Bonus
 - [x]  musique de motus
 - [ ]  Detection du theme
 - [ ]  redirigez l'utilisateur au click sur la notification | Voir universal-link
