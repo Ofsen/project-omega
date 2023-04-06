@@ -2,7 +2,6 @@ import axios from 'axios';
 import {DATA_API, API_URL, ARRONDISSEMENT_API} from '@env';
 import {getLang} from '../utils/lang/languageDetector';
 
-
 export const getPaginatedEvents = async (limit = 20, offset) => {
   return axios.get(`${DATA_API}`, {
     params: {
@@ -57,10 +56,7 @@ export const callApi = async (
     params.q = searchQuery;
   }
 
-  console.log(start, params.start);
-  const a = await axios.get(`${API_URL}`, {params});
-  console.log('pipipoupou', a);
-  return a;
+  return await axios.get(`${API_URL}`, {params});
 };
 
 export const getCommunes = async () => {

@@ -1,12 +1,12 @@
 import React, {useEffect, useState, useCallback} from 'react';
 import styled, {useTheme} from 'styled-components';
-import {ActivityIndicator, FlatList, Text, TextInput} from 'react-native';
+import {ActivityIndicator, FlatList, Text} from 'react-native';
 import {UserLayout} from '../../../components/layout/UserLayout';
 import {callApi, getCommunes} from '../../../services/events';
 import {useFocusEffect} from '@react-navigation/native';
 import {error} from '../../../utils/notifications';
-import Icon from 'react-native-vector-icons/Ionicons';
 import {Button} from '../../../components/Button';
+import Icon from 'react-native-vector-icons/Ionicons';
 import {Checkbox, Menu, Provider, Searchbar} from 'react-native-paper';
 import {Share} from 'react-native';
 import {useTranslation} from 'react-i18next';
@@ -25,18 +25,23 @@ const Velibs = () => {
   const [returningFilter, setReturningFilter] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [menuVisible, setMenuVisible] = useState(false);
-  const [available, setAvailable] = React.useState(false);
   const [location, setLocation] = useState(null);
+  const [showLoadingFooter, setShowLoadingFooter] = useState(true);
 
   const size = 5;
 
   const fetchData = async () => {
     try {
-      const res = await callApi(size, page, selectedCommune, rentingFilter, returningFilter, searchQuery);
-      if (res.status === 200) {
-        console.log("logs", res.data.records);
-        setData(prev => [...prev, ...res.data.records]);
-      }
+      const res = await callApi(
+        size,
+        page,
+        selectedCommune,
+        rentingFilter,
+        returningFilter,
+        searchQuery,
+      );
+      if (res.data.records.length <= 5) setShowLoadingFooter(false);
+      if (res.status === 200) setData(prev => [...prev, ...res.data.records]);
     } catch (err) {
       error(err.message);
     }
@@ -73,7 +78,7 @@ const Velibs = () => {
       error(err.message);
     }
   };
-  
+
   useEffect(() => {
     fetchCommunes();
   }, []);
@@ -84,23 +89,24 @@ const Velibs = () => {
     refreshData();
   };
 
-  const onChangeSearch = () => {
-    setData([]);
-    setPage(0);
-  };
-
   const searchData = async () => {
     try {
       setData([]);
-      const res = await callApi(size, 0, selectedCommune, rentingFilter, returningFilter, searchQuery);
-      if (res.status === 200) {
-        console.log("logs", res.data.records);
-        setData(prev => [...prev, ...res.data.records]);
-      }
+      const res = await callApi(
+        size,
+        0,
+        selectedCommune,
+        rentingFilter,
+        returningFilter,
+        searchQuery,
+      );
+      if (res.data.records.length <= 5) setShowLoadingFooter(false);
+      if (res.status === 200) setData(prev => [...prev, ...res.data.records]);
     } catch (err) {
       error(err.message);
     }
     if (page === 0) setLoading(false);
+  };
 
   useEffect(() => {
     const fields = {};
@@ -109,7 +115,7 @@ const Velibs = () => {
 
   const handleShareLocation = () => {
     if (location) {
-      const url = `https://www.google.com/maps/search/?api=1&query=${location.latitude},${location.longitude}`
+      const url = `https://www.google.com/maps/search/?api=1&query=${location.latitude},${location.longitude}`;
       Share.share({
         message: url,
         title: 'Location',
@@ -155,9 +161,9 @@ const Velibs = () => {
             {fields.capacity} {t('screen.velibs.capacity')}
           </Text>
         </TextContainer>
-        <Button onPress={handleShareLocation}>
-        <Icon name="share" size={24} color="black" />
-      </Button>
+        <ShareButton onPress={handleShareLocation}>
+          <Icon name="share" size={24} color={theme.color} />
+        </ShareButton>
       </StationItem>
     );
   };
@@ -169,32 +175,32 @@ const Velibs = () => {
           placeholder="Rechercher"
           onChangeText={setSearchQuery}
           value={searchQuery}
-          onClearIconPress={() => {setData([]), setPage(0)}}
+          onClearIconPress={() => {
+            setData([]), setPage(0);
+          }}
         />
-        
       </SearchContainer>
-      <Button
-          label="OK"
-          pressHandler={() => searchData()}
-        />
+      <Button label="OK" pressHandler={() => searchData()} />
       <SearchContainer>
         <Menu
           visible={menuVisible}
           onDismiss={() => setMenuVisible(false)}
           anchor={
             <Button
-            label="Toutes les communes"
-            variant="blue"
-            pressHandler={() => setMenuVisible(true)}
+              label="Toutes les communes"
+              variant="blue"
+              pressHandler={() => setMenuVisible(true)}
+            />
+          }>
+          <Menu.Item
+            onPress={() => {
+              setSelectedCommune(null);
+              setPage(0);
+              setData([]);
+              setMenuVisible(false);
+            }}
+            title="Toutes les communes"
           />
-          }
-        >
-          <Menu.Item onPress={() => {
-            setSelectedCommune(null);
-            setPage(0);
-            setData([]);
-            setMenuVisible(false);
-          }} title="Toutes les communes" />
           {communes.map((commune, index) => (
             <Menu.Item
               key={index}
@@ -210,16 +216,20 @@ const Velibs = () => {
         </Menu>
       </SearchContainer>
       <FilterContainer>
-      <Checkbox.Item
-        label="Louer"
-        status={rentingFilter ? 'checked' : 'unchecked'}
-        onPress={() => updateFilters(!rentingFilter, returningFilter)}
-      />
-      <Checkbox.Item
-        label="Retourner"
-        status={returningFilter ? 'checked' : 'unchecked'}
-        onPress={() => updateFilters(rentingFilter, !returningFilter)}
-      />
+        <Checkbox.Item
+          label="Louer"
+          color={theme.color}
+          labelStyle={{color: theme.color}}
+          status={rentingFilter ? 'checked' : 'unchecked'}
+          onPress={() => updateFilters(!rentingFilter, returningFilter)}
+        />
+        <Checkbox.Item
+          label="Retourner"
+          color={theme.color}
+          labelStyle={{color: theme.color}}
+          status={returningFilter ? 'checked' : 'unchecked'}
+          onPress={() => updateFilters(rentingFilter, !returningFilter)}
+        />
       </FilterContainer>
       {loading ? (
         <Centered>
@@ -246,7 +256,7 @@ const Velibs = () => {
               )
             }
             ListFooterComponent={() => {
-              if (data.length > 0) {
+              if (showLoadingFooter) {
                 return (
                   <Centered>
                     <ActivityIndicator size="large" color={theme.red} />
@@ -309,7 +319,7 @@ const FilterContainer = styled.View`
   padding: 8px 16px;
 `;
 
-const Button = styled.TouchableOpacity`
+const ShareButton = styled.TouchableOpacity`
   background-color: ${({theme}) => theme.primary};
   padding: 10px;
   border-radius: 5px;
