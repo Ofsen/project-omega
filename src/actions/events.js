@@ -48,7 +48,7 @@ export const getSingleEvent = eventId => {
       .then(response => {
         dispatch({
           type: GET_SINGLE_EVENT_SUCCESS,
-          payload: response.data,
+          payload: response.data.record,
         });
       })
       .catch(error => {

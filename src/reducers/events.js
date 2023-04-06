@@ -22,6 +22,7 @@ const events = (state = initialState, action) => {
         ...state,
         loading: true,
         error: null,
+        singleEvent: null,
       };
     case GET_PAGINATED_EVENTS_SUCCESS:
       return {

@@ -1,6 +1,6 @@
 import React, {useEffect, useState, useCallback} from 'react';
 import styled, {useTheme} from 'styled-components';
-import {ActivityIndicator, FlatList, Text} from 'react-native';
+import {ActivityIndicator, FlatList} from 'react-native';
 import {UserLayout} from '../../../components/layout/UserLayout';
 import {callApi, getCommunes} from '../../../services/events';
 import {useFocusEffect} from '@react-navigation/native';
@@ -10,6 +10,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {Checkbox, Menu, Provider, Searchbar} from 'react-native-paper';
 import {Share} from 'react-native';
 import {useTranslation} from 'react-i18next';
+import { Dimensions } from 'react-native';
 
 const Velibs = () => {
   const theme = useTheme();
@@ -40,7 +41,7 @@ const Velibs = () => {
         returningFilter,
         searchQuery,
       );
-      if (res.data.records.length <= 5) setShowLoadingFooter(false);
+      if (res.data.records.length < 5) setShowLoadingFooter(false);
       if (res.status === 200) setData(prev => [...prev, ...res.data.records]);
     } catch (err) {
       error(err.message);
@@ -58,8 +59,10 @@ const Velibs = () => {
   useFocusEffect(
     useCallback(() => {
       setData([]);
-      setLoading(true);
       setPage(0);
+      setSelectedCommune('');
+      setLoading(true);
+      setShowLoadingFooter(true);
       if (page === 0) fetchData();
     }, []),
   );
@@ -100,7 +103,7 @@ const Velibs = () => {
         returningFilter,
         searchQuery,
       );
-      if (res.data.records.length <= 5) setShowLoadingFooter(false);
+      if (res.data.records.length < 5) setShowLoadingFooter(false);
       if (res.status === 200) setData(prev => [...prev, ...res.data.records]);
     } catch (err) {
       error(err.message);
@@ -171,23 +174,24 @@ const Velibs = () => {
   return (
     <UserLayout title="Velib">
       <SearchContainer>
-        <Searchbar
-          placeholder="Rechercher"
+        <StyledSearchbar
+          placeholder={t('screen.velibs.search')}
           onChangeText={setSearchQuery}
           value={searchQuery}
           onClearIconPress={() => {
             setData([]), setPage(0);
           }}
         />
+        <SearchButton><Button pressHandler={() => searchData()} icon="search"/></SearchButton>
       </SearchContainer>
-      <Button label="OK" pressHandler={() => searchData()} />
+      
       <SearchContainer>
         <Menu
           visible={menuVisible}
           onDismiss={() => setMenuVisible(false)}
           anchor={
             <Button
-              label="Toutes les communes"
+              label={selectedCommune || t('screen.velibs.town')}
               variant="blue"
               pressHandler={() => setMenuVisible(true)}
             />
@@ -198,8 +202,9 @@ const Velibs = () => {
               setPage(0);
               setData([]);
               setMenuVisible(false);
+              setShowLoadingFooter(true);
             }}
-            title="Toutes les communes"
+            title={t('screen.velibs.town')}
           />
           {communes.map((commune, index) => (
             <Menu.Item
@@ -217,14 +222,14 @@ const Velibs = () => {
       </SearchContainer>
       <FilterContainer>
         <Checkbox.Item
-          label="Louer"
+          label={t('screen.velibs.rent')}
           color={theme.color}
           labelStyle={{color: theme.color}}
           status={rentingFilter ? 'checked' : 'unchecked'}
           onPress={() => updateFilters(!rentingFilter, returningFilter)}
         />
         <Checkbox.Item
-          label="Retourner"
+          label={t('screen.velibs.return')}
           color={theme.color}
           labelStyle={{color: theme.color}}
           status={returningFilter ? 'checked' : 'unchecked'}
@@ -312,19 +317,34 @@ const SearchContainer = styled.View`
   flex-direction: row;
   align-items: center;
 `;
+const StyledSearchbar = styled(Searchbar)`
+  flex-basis: 80%;
+`;
+const SearchButton = styled.View`
+  width: 20%;
+  border-top-left-radius: 50px;
+  border-top-right-radius: 50px;
+  border-bottom-left-radius: 50px;
+  border-bottom-right-radius: 50px;
+  overflow: hidden;
+  margin: 10px;
+`;
 const FilterContainer = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
   padding: 8px 16px;
 `;
-
 const ShareButton = styled.TouchableOpacity`
   background-color: ${({theme}) => theme.primary};
   padding: 10px;
   border-radius: 5px;
   margin-top: 70px;
 `;
+const Text = styled.Text`
+  color: ${({theme}) =>theme.color};
+`;
+
 
 export default () => (
   <Provider>

@@ -22,6 +22,9 @@ module.exports = {
         capacity: 'Capacity',
         dock: 'Dock',
         rent: 'Rent',
+        return: 'Return',
+        town: 'All the towns',
+        search: 'Search',
       },
       favorites: {
         title: 'Favorites',

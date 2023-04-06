@@ -7,6 +7,8 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {error} from '../../../utils/notifications';
 import {useTranslation} from 'react-i18next';
+import { getSingleEvent } from '../../../actions/events';
+import { useDispatch } from 'react-redux';
 
 const Favorites = () => {
   const theme = useTheme();
@@ -56,6 +58,8 @@ const Favorites = () => {
     }, []),
   );
 
+  const dispatch= useDispatch();
+  
   return (
     <UserLayout title="Favories">
       {loading ? (
@@ -68,10 +72,12 @@ const Favorites = () => {
           renderItem={({item}) => (
             <PressableContainer
               onPress={() =>
-                navigation.navigate('EventSingle', {
+                {
+                  dispatch(getSingleEvent(item.eventId))
+                  navigation.navigate('EventSingle', {
                   eventId: item.eventId,
                   title: item.title,
-                })
+                })}
               }>
               <Title numberOfLines={1}>{item.title}</Title>
               <FavoriteButton onPress={() => removeFavorite(item.eventId)}>

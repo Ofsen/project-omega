@@ -1,7 +1,7 @@
 import React from 'react';
 import styled, {useTheme} from 'styled-components';
 import {Text, ActivityIndicator, ScrollView, Linking} from 'react-native';
-import {getSingleEvent} from '../../../../services/events';
+import {getSingleEvent} from '../../../../actions/events';
 import moment from 'moment';
 import {Button} from '../../../../components/Button';
 import {error} from '../../../../utils/notifications';
@@ -15,11 +15,11 @@ const EventSingle = props => {
   const {t} = useTranslation();
   const [loading, setLoading] = React.useState(true);
 
-
   const dispatch = useDispatch();
 
   const fetchData = () => {
     dispatch(getSingleEvent(route.params.eventId));
+    setLoading(false);
   };
   React.useEffect(() => {
     fetchData();
