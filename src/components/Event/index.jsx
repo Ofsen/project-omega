@@ -4,7 +4,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Icon from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {error} from '../../utils/notifications';
+import {errorAlert} from '../../utils/notifications';
 import {useTranslation} from 'react-i18next';
 
 export const Event = props => {
@@ -20,7 +20,7 @@ export const Event = props => {
       const isFavorited = parsedData.find(item => item.eventId === id);
       setFavorite(isFavorited);
     } catch (err) {
-      error(err.message);
+      errorAlert(err.message);
     }
   };
 
@@ -41,7 +41,7 @@ export const Event = props => {
         setFavorite(true);
       }
     } catch (err) {
-      error(err.message);
+      errorAlert(err.message);
     }
   };
 
@@ -68,13 +68,15 @@ export const Event = props => {
         <Title>{title}</Title>
         <LeadingText>{leadText}</LeadingText>
         <DateContainer>
-          <Date>
-            {`${t('screen.events.from')} ${moment(dateStart).format(
-              'DD-MM-YYYY',
-            )} ${t('screen.events.to')} ${moment(dateEnd).format(
-              'DD-MM-YYYY',
-            )}`}
-          </Date>
+          {dateStart && dateEnd && (
+            <Date>
+              {`${t('screen.events.from')} ${moment(dateStart).format(
+                'DD-MM-YYYY',
+              )} ${t('screen.events.to')} ${moment(dateEnd).format(
+                'DD-MM-YYYY',
+              )}`}
+            </Date>
+          )}
         </DateContainer>
       </ContentContainer>
     </PressableContainer>

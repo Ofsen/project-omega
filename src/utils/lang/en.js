@@ -6,6 +6,7 @@ module.exports = {
         text: "Log in or register and get access to all the velib' locations in Paris!",
       },
       events: {
+        eventsTitle: 'Events',
         noevents: 'No events found',
         nodata: 'No data available',
         description: 'Description',

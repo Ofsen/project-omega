@@ -6,6 +6,7 @@ module.exports = {
         text: "Connectez-vous ou inscrivez-vous et accédez à tous les emplacements velib' à Paris!",
       },
       events: {
+        eventsTitle: 'Evenements',
         noevents: 'Aucun evenement trouvé',
         nodata: 'Aucune donnée disponible',
         description: 'Description',

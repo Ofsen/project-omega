@@ -4,8 +4,8 @@ import {Text, ActivityIndicator, ScrollView, Linking} from 'react-native';
 import {getSingleEvent} from '../../../../actions/events';
 import moment from 'moment';
 import {Button} from '../../../../components/Button';
-import {error} from '../../../../utils/notifications';
-import { useSelector, useDispatch } from 'react-redux';
+import {errorAlert} from '../../../../utils/notifications';
+import {useSelector, useDispatch} from 'react-redux';
 import {useTranslation} from 'react-i18next';
 
 const EventSingle = props => {

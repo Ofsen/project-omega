@@ -59,7 +59,7 @@ const UserStack = () => {
         })}>
         <Tab.Screen
           options={{
-            tabBarLabel: t('misc.home'),
+            tabBarLabel: t('screen.events.eventsTitle'),
           }}
           name="Home"
           component={HomeStack}

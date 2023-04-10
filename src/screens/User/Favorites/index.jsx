@@ -5,10 +5,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import styled, {useTheme} from 'styled-components';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {error} from '../../../utils/notifications';
+import {errorAlert} from '../../../utils/notifications';
 import {useTranslation} from 'react-i18next';
-import { getSingleEvent } from '../../../actions/events';
-import { useDispatch } from 'react-redux';
+import {getSingleEvent} from '../../../actions/events';
+import {useDispatch} from 'react-redux';
 
 const Favorites = () => {
   const theme = useTheme();
@@ -24,7 +24,7 @@ const Favorites = () => {
       const localData = await AsyncStorage.getItem('favorites');
       setData(JSON.parse(localData || '[]'));
     } catch (err) {
-      error(err.message);
+      errorAlert(err.message);
     }
     setLoading(false);
   };
@@ -35,7 +35,7 @@ const Favorites = () => {
       const localData = await AsyncStorage.getItem('favorites');
       setData(JSON.parse(localData || '[]'));
     } catch (err) {
-      error(err.message);
+      errorAlert(err.message);
     }
     setRefreshing(false);
   };
@@ -48,7 +48,7 @@ const Favorites = () => {
       await AsyncStorage.setItem('favorites', JSON.stringify(filteredData));
       fetchData();
     } catch (err) {
-      error(err.message);
+      errorAlert(err.message);
     }
   };
 
@@ -58,8 +58,8 @@ const Favorites = () => {
     }, []),
   );
 
-  const dispatch= useDispatch();
-  
+  const dispatch = useDispatch();
+
   return (
     <UserLayout title="Favories">
       {loading ? (
@@ -71,14 +71,13 @@ const Favorites = () => {
           data={data}
           renderItem={({item}) => (
             <PressableContainer
-              onPress={() =>
-                {
-                  dispatch(getSingleEvent(item.eventId))
-                  navigation.navigate('EventSingle', {
+              onPress={() => {
+                dispatch(getSingleEvent(item.eventId));
+                navigation.navigate('EventSingle', {
                   eventId: item.eventId,
                   title: item.title,
-                })}
-              }>
+                });
+              }}>
               <Title numberOfLines={1}>{item.title}</Title>
               <FavoriteButton onPress={() => removeFavorite(item.eventId)}>
                 <Icon name={'ios-heart-dislike'} size={28} color={theme.red} />

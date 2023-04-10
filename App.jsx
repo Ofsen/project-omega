@@ -4,16 +4,34 @@ import {MainRoutes} from './src/config/MainRoutes';
 import {ThemeProvider} from 'styled-components';
 import {darkTheme, lightTheme} from './src/config/theme';
 import notifee, {EventType} from '@notifee/react-native';
-import {StatusBar} from 'react-native';
+import {StatusBar, Appearance} from 'react-native';
 import FlashMessage from 'react-native-flash-message';
 import {SplashScreen} from './src/screens/Splash';
-import {Provider} from 'react-redux';
+import {Provider, useDispatch} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
 import {persistor, store} from './src/config/store';
 import {useSelector} from 'react-redux';
+import {toggleTheme} from './src/actions';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const EntryPoint = () => {
   const theme = useSelector(state => state.settings.theme);
+  const dispatch = useDispatch();
+
+  const getLocalTheme = async () => {
+    try {
+      const storedTheme = await AsyncStorage.getItem('theme');
+      if (Appearance.getColorScheme() !== theme && storedTheme === null) {
+        dispatch(toggleTheme());
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  React.useEffect(() => {
+    getLocalTheme();
+  });
 
   return (
     <ThemeProvider theme={theme === 'light' ? lightTheme : darkTheme}>

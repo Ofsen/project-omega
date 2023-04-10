@@ -2,7 +2,7 @@ import React from 'react';
 import {showMessage} from 'react-native-flash-message';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-export const warn = message => {
+export const warnAlert = message => {
   showMessage({
     message: 'Attention',
     description: message,
@@ -13,7 +13,7 @@ export const warn = message => {
   });
 };
 
-export const error = message => {
+export const errorAlert = message => {
   showMessage({
     message: 'Erreur',
     description: message,
@@ -22,7 +22,7 @@ export const error = message => {
   });
 };
 
-export const success = message => {
+export const successAlert = message => {
   showMessage({
     message: 'Bien',
     description: message,

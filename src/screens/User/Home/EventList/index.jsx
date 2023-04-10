@@ -1,63 +1,64 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import styled, {useTheme} from 'styled-components';
-import {ActivityIndicator, FlatList} from 'react-native';
+import {ActivityIndicator} from 'react-native';
 import {UserLayout} from '../../../../components/layout/UserLayout';
-import {getPaginatedEvents} from '../../../../services/events';
 import {Event} from '../../../../components/Event';
 import {useFocusEffect} from '@react-navigation/native';
-import {error} from '../../../../utils/notifications';
+import {errorAlert} from '../../../../utils/notifications';
 import {useTranslation} from 'react-i18next';
+import {useDispatch, useSelector} from 'react-redux';
+import {getFirstChunkOfEvents, getMoreEvents} from '../../../../actions/events';
 
 const EventList = () => {
   const theme = useTheme();
   const {t} = useTranslation();
-  const [data, setData] = useState([]);
+  const dispatch = useDispatch();
+  const {paginatedEvents, loading, loadingMore, error} = useSelector(
+    state => state.events,
+  );
   const [page, setPage] = useState(0);
-  const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
   const size = 5;
 
-  const fetchData = async () => {
-    try {
-      const res = await getPaginatedEvents(size, page);
-      if (res.status === 200) {
-        setData(prev => [...prev, ...res.data.records]);
-      }
-    } catch (err) {
-      error(err.message);
+  const fetchData = () => {
+    dispatch(getFirstChunkOfEvents(size));
+    if (error) {
+      errorAlert(error);
     }
-    if (page === 0) setLoading(false);
+  };
+
+  const fetchMoreData = () => {
+    dispatch(getMoreEvents(size, page));
+    if (error) {
+      errorAlert(error);
+    }
   };
 
   const refreshData = async () => {
-    setRefreshing(true);
-    setData([]);
-    setRefreshing(false);
     setPage(0);
+    dispatch(getFirstChunkOfEvents(size));
   };
 
   useFocusEffect(
     React.useCallback(() => {
-      setData([]);
-      setLoading(true);
-      setPage(0);
+      fetchData();
     }, []),
   );
 
   React.useEffect(() => {
-    fetchData();
+    if (page !== 0) fetchMoreData();
   }, [page]);
 
   return (
-    <UserLayout title={t('misc.home')}>
+    <UserLayout title={t('screen.events.eventsTitle')}>
       {loading ? (
         <Centered>
           <ActivityIndicator size="large" color={theme.red} />
         </Centered>
       ) : (
         <List
-          data={data}
+          data={paginatedEvents}
           initialNumToRender={size}
           renderItem={({item}) => (
             <Event
@@ -73,7 +74,7 @@ const EventList = () => {
           keyExtractor={item => item.record.id}
           onEndReachedThreshold={(size * 2) / 3}
           onEndReached={() => {
-            setPage(prev => page + 1);
+            setPage(prev => prev + 1);
           }}
           onRefresh={() => {
             refreshData();
@@ -87,7 +88,7 @@ const EventList = () => {
             )
           }
           ListFooterComponent={() => {
-            if (data.length > 0) {
+            if (loadingMore) {
               return (
                 <Centered>
                   <ActivityIndicator size="large" color={theme.red} />

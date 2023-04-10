@@ -7,8 +7,8 @@ import styled, {useTheme} from 'styled-components';
 import notifee from '@notifee/react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import messaging from '@react-native-firebase/messaging';
-import {error} from '../../../utils/notifications';
-import {useDispatch} from 'react-redux';
+import {errorAlert} from '../../../utils/notifications';
+import {useDispatch, useSelector} from 'react-redux';
 import {toggleTheme} from '../../../actions';
 import {RadioButton} from 'react-native-paper';
 import {useTranslation} from 'react-i18next';
@@ -16,10 +16,17 @@ import {useTranslation} from 'react-i18next';
 const Profile = () => {
   const {Logout, currentUser} = useAuth();
   const theme = useTheme();
+  const storedTheme = useSelector(state => state.settings.theme);
   const {i18n, t} = useTranslation();
   const [lang, setLang] = useState(i18n.language);
 
   const dispatch = useDispatch();
+
+  const setTheme = async () => {
+    const theme = storedTheme === 'light' ? 'dark' : 'light';
+    await AsyncStorage.setItem('theme', theme);
+    dispatch(toggleTheme());
+  };
 
   const changeLanguage = async lng => {
     i18n.changeLanguage(lng);
@@ -47,7 +54,7 @@ const Profile = () => {
         name: 'Default Channel',
       });
     } catch (err) {
-      error(err.message);
+      errorAlert(err.message);
     }
   };
 
@@ -70,7 +77,7 @@ const Profile = () => {
         },
       });
     } catch (err) {
-      error(err.message);
+      errorAlert(err.message);
     }
   };
 
@@ -108,7 +115,7 @@ const Profile = () => {
         <Button
           label={t('misc.toggletheme')}
           variant="yellow"
-          pressHandler={() => dispatch(toggleTheme())}
+          pressHandler={() => setTheme()}
         />
         <RadioButton.Group
           onValueChange={value => changeLanguage(value)}

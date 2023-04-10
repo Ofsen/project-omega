@@ -4,13 +4,11 @@ import {ActivityIndicator, FlatList} from 'react-native';
 import {UserLayout} from '../../../components/layout/UserLayout';
 import {callApi, getCommunes} from '../../../services/events';
 import {useFocusEffect} from '@react-navigation/native';
-import {error} from '../../../utils/notifications';
+import {errorAlert} from '../../../utils/notifications';
 import {Button} from '../../../components/Button';
-import Icon from 'react-native-vector-icons/Ionicons';
 import {Checkbox, Menu, Provider, Searchbar} from 'react-native-paper';
-import {Share} from 'react-native';
 import {useTranslation} from 'react-i18next';
-import { Dimensions } from 'react-native';
+import {Velib} from '../../../components/Velib';
 
 const Velibs = () => {
   const theme = useTheme();
@@ -26,7 +24,6 @@ const Velibs = () => {
   const [returningFilter, setReturningFilter] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [menuVisible, setMenuVisible] = useState(false);
-  const [location, setLocation] = useState(null);
   const [showLoadingFooter, setShowLoadingFooter] = useState(true);
 
   const size = 5;
@@ -44,7 +41,7 @@ const Velibs = () => {
       if (res.data.records.length < 5) setShowLoadingFooter(false);
       if (res.status === 200) setData(prev => [...prev, ...res.data.records]);
     } catch (err) {
-      error(err.message);
+      errorAlert(err.message);
     }
     if (page === 0) setLoading(false);
   };
@@ -78,7 +75,7 @@ const Velibs = () => {
         setCommunes(response.facets[0].facets);
       }
     } catch (err) {
-      error(err.message);
+      errorAlert(err.message);
     }
   };
 
@@ -106,69 +103,9 @@ const Velibs = () => {
       if (res.data.records.length < 5) setShowLoadingFooter(false);
       if (res.status === 200) setData(prev => [...prev, ...res.data.records]);
     } catch (err) {
-      error(err.message);
+      errorAlert(err.message);
     }
     if (page === 0) setLoading(false);
-  };
-
-  useEffect(() => {
-    const fields = {};
-    setLocation(`${fields.latitude},${fields.longitude}`);
-  }, []);
-
-  const handleShareLocation = () => {
-    if (location) {
-      const url = `https://www.google.com/maps/search/?api=1&query=${location.latitude},${location.longitude}`;
-      Share.share({
-        message: url,
-        title: 'Location',
-        url: url,
-      });
-    }
-  };
-
-  const renderItem = ({item}) => {
-    const fields = item.fields;
-    const isRenting = fields.is_renting === 'OUI';
-    const isReturning = fields.is_returning === 'OUI';
-
-    return (
-      <StationItem>
-        <InfoContainer>
-          <IconRow>
-            <Icon
-              name={isRenting ? 'checkmark-circle' : 'close-circle'}
-              size={28}
-              color={isRenting ? 'green' : 'red'}
-            />
-            <Text>{t('screen.velibs.rent')}</Text>
-          </IconRow>
-          <IconRow>
-            <Icon
-              name={isReturning ? 'checkmark-circle' : 'close-circle'}
-              size={28}
-              color={isReturning ? 'green' : 'red'}
-            />
-            <Text>{t('screen.velibs.dock')}</Text>
-          </IconRow>
-        </InfoContainer>
-        <TextContainer>
-          <Station>{fields.name}</Station>
-          <Text>
-            {fields.numbikesavailable} {t('screen.velibs.ebikes')}
-          </Text>
-          <Text>
-            {fields.numdocksavailable} {t('screen.velibs.mechanical')}
-          </Text>
-          <Text>
-            {fields.capacity} {t('screen.velibs.capacity')}
-          </Text>
-        </TextContainer>
-        <ShareButton onPress={handleShareLocation}>
-          <Icon name="share" size={24} color={theme.color} />
-        </ShareButton>
-      </StationItem>
-    );
   };
 
   return (
@@ -182,9 +119,10 @@ const Velibs = () => {
             setData([]), setPage(0);
           }}
         />
-        <SearchButton><Button pressHandler={() => searchData()} icon="search"/></SearchButton>
+        <SearchButton>
+          <Button pressHandler={() => searchData()} icon="search" />
+        </SearchButton>
       </SearchContainer>
-      
       <SearchContainer>
         <Menu
           visible={menuVisible}
@@ -241,71 +179,42 @@ const Velibs = () => {
           <ActivityIndicator size="large" color={theme.red} />
         </Centered>
       ) : (
-        <ContentContainer>
-          <FlatList
-            data={data}
-            renderItem={renderItem}
-            keyExtractor={(item, index) => item.recordid + '_' + index}
-            onEndReached={() => {
-              setPage(prev => page + 1);
-            }}
-            onRefresh={() => {
-              refreshData();
-            }}
-            refreshing={refreshing}
-            ListEmptyComponent={() =>
-              !refreshing && (
+        <List
+          data={data}
+          renderItem={({item}) => <Velib item={item} />}
+          keyExtractor={(item, index) => item.recordid + '_' + index}
+          onEndReached={() => {
+            setPage(prev => prev + 1);
+          }}
+          onRefresh={() => {
+            refreshData();
+          }}
+          refreshing={refreshing}
+          ListEmptyComponent={() =>
+            !refreshing && (
+              <Centered>
+                <Text>{t('screen.events.noevents')}</Text>
+              </Centered>
+            )
+          }
+          ListFooterComponent={() => {
+            if (showLoadingFooter) {
+              return (
                 <Centered>
-                  <Text>{t('screen.events.noevents')}</Text>
+                  <ActivityIndicator size="large" color={theme.red} />
                 </Centered>
-              )
+              );
             }
-            ListFooterComponent={() => {
-              if (showLoadingFooter) {
-                return (
-                  <Centered>
-                    <ActivityIndicator size="large" color={theme.red} />
-                  </Centered>
-                );
-              }
-              return null;
-            }}
-          />
-        </ContentContainer>
+            return null;
+          }}
+        />
       )}
     </UserLayout>
   );
 };
 
-const ContentContainer = styled.View`
-  flex: 1;
+const List = styled.FlatList`
   padding: 0 16px;
-  gap: 16px;
-`;
-
-const StationItem = styled.View`
-  background-color: ${({theme}) => theme.secondaryBackground};
-  padding: 20px;
-  margin-bottom: 20px;
-  flex-direction: row;
-`;
-const InfoContainer = styled.View`
-  flex-direction: column;
-  flex: 1;
-`;
-const IconRow = styled.View`
-  flex-direction: row;
-  align-items: center;
-`;
-const TextContainer = styled.View`
-  flex-direction: column;
-  flex: 2;
-  padding-left: 10px;
-`;
-const Station = styled.Text`
-  font-size: 20px;
-  font-weight: bold;
-  color: ${({theme}) => theme.color};
 `;
 const Centered = styled.View`
   flex: 1;
@@ -335,16 +244,9 @@ const FilterContainer = styled.View`
   justify-content: space-between;
   padding: 8px 16px;
 `;
-const ShareButton = styled.TouchableOpacity`
-  background-color: ${({theme}) => theme.primary};
-  padding: 10px;
-  border-radius: 5px;
-  margin-top: 70px;
-`;
 const Text = styled.Text`
-  color: ${({theme}) =>theme.color};
+  color: ${({theme}) => theme.color};
 `;
-
 
 export default () => (
   <Provider>
