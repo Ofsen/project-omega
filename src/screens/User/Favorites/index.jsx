@@ -22,8 +22,12 @@ const Favorites = () => {
     setLoading(true);
     try {
       const localData = await AsyncStorage.getItem('favorites');
-      setData(JSON.parse(localData || '[]'));
+      const localVelibData = await AsyncStorage.getItem('velib_favorites');
+      const data = JSON.parse(localData || '[]'),
+        velibData = JSON.parse(localVelibData || '[]');
+      setData([...data, ...velibData]);
     } catch (err) {
+      console.log(err);
       errorAlert(err.message);
     }
     setLoading(false);
@@ -33,19 +37,37 @@ const Favorites = () => {
     setRefreshing(true);
     try {
       const localData = await AsyncStorage.getItem('favorites');
-      setData(JSON.parse(localData || '[]'));
+      const localVelibData = await AsyncStorage.getItem('velib_favorites');
+      const data = JSON.parse(localData || '[]'),
+        velibData = JSON.parse(localVelibData || '[]');
+      setData([...data, ...velibData]);
     } catch (err) {
       errorAlert(err.message);
     }
     setRefreshing(false);
   };
 
-  const removeFavorite = async eventId => {
+  const removeEventFavorite = async eventId => {
     try {
       const localData = await AsyncStorage.getItem('favorites');
       const parsedData = JSON.parse(localData || '[]');
       const filteredData = parsedData.filter(item => item.eventId !== eventId);
       await AsyncStorage.setItem('favorites', JSON.stringify(filteredData));
+      fetchData();
+    } catch (err) {
+      errorAlert(err.message);
+    }
+  };
+
+  const removeVelibFavorite = async velibId => {
+    try {
+      const localData = await AsyncStorage.getItem('velib_favorites');
+      const parsedData = JSON.parse(localData || '[]');
+      const filteredData = parsedData.filter(item => item.velibId !== velibId);
+      await AsyncStorage.setItem(
+        'velib_favorites',
+        JSON.stringify(filteredData),
+      );
       fetchData();
     } catch (err) {
       errorAlert(err.message);
@@ -72,14 +94,23 @@ const Favorites = () => {
           renderItem={({item}) => (
             <PressableContainer
               onPress={() => {
-                dispatch(getSingleEvent(item.eventId));
-                navigation.navigate('EventSingle', {
-                  eventId: item.eventId,
-                  title: item.title,
-                });
+                if (item.eventId) {
+                  dispatch(getSingleEvent(item.eventId));
+                  navigation.navigate('EventSingle', {
+                    eventId: item.eventId,
+                    title: item.title,
+                  });
+                }
               }}>
-              <Title numberOfLines={1}>{item.title}</Title>
-              <FavoriteButton onPress={() => removeFavorite(item.eventId)}>
+              <Title numberOfLines={1}>
+                {item.eventId ? item.title : item.name}
+              </Title>
+              <FavoriteButton
+                onPress={() =>
+                  item.eventId
+                    ? removeEventFavorite(item.eventId)
+                    : removeVelibFavorite(item.velibId)
+                }>
                 <Icon name={'ios-heart-dislike'} size={28} color={theme.red} />
               </FavoriteButton>
             </PressableContainer>

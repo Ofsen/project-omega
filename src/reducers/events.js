@@ -18,7 +18,7 @@ const initialState = {
   error: null,
 };
 
-const events = (state = initialState, action) => {
+module.exports = (state = initialState, action) => {
   switch (action.type) {
     case GET_FIRST_CHUNK_OF_EVENTS_REQUEST:
       return {
@@ -77,5 +77,3 @@ const events = (state = initialState, action) => {
       return state;
   }
 };
-
-export default events;

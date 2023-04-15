@@ -84,8 +84,4 @@ export const getSingleEvent = eventId => dispatch => {
     });
 };
 
-export const resetEvents = () => {
-  return {
-    type: RESET_EVENTS,
-  };
-};
+export const resetEvents = () => ({type: RESET_EVENTS});

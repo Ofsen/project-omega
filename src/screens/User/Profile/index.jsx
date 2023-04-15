@@ -1,38 +1,18 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {useAuth} from '../../../contexts/authContext';
 import TextField from '../../../components/Forms/TextField';
 import {Button} from '../../../components/Button';
 import {UserLayout} from '../../../components/layout/UserLayout';
-import styled, {useTheme} from 'styled-components';
+import styled from 'styled-components';
 import notifee from '@notifee/react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import messaging from '@react-native-firebase/messaging';
 import {errorAlert} from '../../../utils/notifications';
-import {useDispatch, useSelector} from 'react-redux';
-import {toggleTheme} from '../../../actions';
-import {RadioButton} from 'react-native-paper';
 import {useTranslation} from 'react-i18next';
 
 const Profile = () => {
   const {Logout, currentUser} = useAuth();
-  const theme = useTheme();
-  const storedTheme = useSelector(state => state.settings.theme);
-  const {i18n, t} = useTranslation();
-  const [lang, setLang] = useState(i18n.language);
-
-  const dispatch = useDispatch();
-
-  const setTheme = async () => {
-    const theme = storedTheme === 'light' ? 'dark' : 'light';
-    await AsyncStorage.setItem('theme', theme);
-    dispatch(toggleTheme());
-  };
-
-  const changeLanguage = async lng => {
-    i18n.changeLanguage(lng);
-    setLang(lng);
-    await AsyncStorage.setItem('lng', lng);
-  };
+  const {t} = useTranslation();
 
   const initNotification = async () => {
     try {
@@ -99,11 +79,6 @@ const Profile = () => {
       <ContentContainer>
         <TextField label={t('misc.email')} value={currentUser.email} disabled />
         <Button
-          variant="red"
-          label={t('misc.logout')}
-          pressHandler={() => Logout()}
-        />
-        <Button
           label={t('misc.notifyme')}
           pressHandler={() =>
             onDisplayNotification(
@@ -113,29 +88,10 @@ const Profile = () => {
           }
         />
         <Button
-          label={t('misc.toggletheme')}
-          variant="yellow"
-          pressHandler={() => setTheme()}
+          variant="red"
+          label={t('misc.logout')}
+          pressHandler={() => Logout()}
         />
-        <RadioButton.Group
-          onValueChange={value => changeLanguage(value)}
-          value={lang}>
-          <LangHeader>{t('misc.language')}</LangHeader>
-          <RadioButton.Item
-            labelStyle={{color: theme.color}}
-            color={theme.color}
-            uncheckedColor={theme.color}
-            label={t('misc.english')}
-            value="en"
-          />
-          <RadioButton.Item
-            labelStyle={{color: theme.color}}
-            color={theme.color}
-            uncheckedColor={theme.color}
-            label={t('misc.french')}
-            value="fr"
-          />
-        </RadioButton.Group>
       </ContentContainer>
     </UserLayout>
   );
@@ -147,8 +103,4 @@ const ContentContainer = styled.View`
   flex: 1;
   padding: 0 16px;
   gap: 16px;
-`;
-
-const LangHeader = styled.Text`
-  color: ${({theme}) => theme.color};
 `;

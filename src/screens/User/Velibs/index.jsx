@@ -1,187 +1,195 @@
 import React, {useEffect, useState, useCallback} from 'react';
 import styled, {useTheme} from 'styled-components';
-import {ActivityIndicator, FlatList} from 'react-native';
+import {ActivityIndicator, Pressable} from 'react-native';
 import {UserLayout} from '../../../components/layout/UserLayout';
-import {callApi, getCommunes} from '../../../services/events';
 import {useFocusEffect} from '@react-navigation/native';
 import {errorAlert} from '../../../utils/notifications';
 import {Button} from '../../../components/Button';
 import {Checkbox, Menu, Provider, Searchbar} from 'react-native-paper';
 import {useTranslation} from 'react-i18next';
-import {Velib} from '../../../components/Velib';
+import {VelibItem} from '../../../components/Velib';
+import {useDispatch, useSelector} from 'react-redux';
+import Icon from 'react-native-vector-icons/Octicons';
+import {
+  getCommunsVelib,
+  getFirstChunkOfVelibs,
+  getMoreVelibs,
+} from '../../../actions/velibs';
 
 const Velibs = () => {
   const theme = useTheme();
   const {t} = useTranslation();
-  const [data, setData] = useState([]);
+  const dispatch = useDispatch();
   const [page, setPage] = useState(0);
-  const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-  const [communes, setCommunes] = useState([]);
   const [selectedCommune, setSelectedCommune] = useState(null);
   const [rentingFilter, setRentingFilter] = useState(false);
   const [returningFilter, setReturningFilter] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [menuVisible, setMenuVisible] = useState(false);
-  const [showLoadingFooter, setShowLoadingFooter] = useState(true);
+
+  const {velibs, communs, loading, loadingMore, errorVelib} = useSelector(
+    state => state.velibs,
+  );
 
   const size = 5;
 
-  const fetchData = async () => {
-    try {
-      const res = await callApi(
+  const fetchData = () => {
+    dispatch(
+      getFirstChunkOfVelibs(
+        size,
+        selectedCommune,
+        rentingFilter,
+        returningFilter,
+        searchQuery,
+      ),
+    );
+    dispatch(getCommunsVelib());
+    if (errorVelib) errorAlert(errorVelib);
+  };
+
+  const fetchMoreData = () => {
+    dispatch(
+      getMoreVelibs(
         size,
         page,
         selectedCommune,
         rentingFilter,
         returningFilter,
         searchQuery,
-      );
-      if (res.data.records.length < 5) setShowLoadingFooter(false);
-      if (res.status === 200) setData(prev => [...prev, ...res.data.records]);
-    } catch (err) {
-      errorAlert(err.message);
-    }
-    if (page === 0) setLoading(false);
+      ),
+    );
+    if (errorVelib) errorAlert(errorVelib);
   };
 
   const refreshData = async () => {
-    setRefreshing(true);
-    setData([]);
-    setRefreshing(false);
     setPage(0);
-  };
-
-  useFocusEffect(
-    useCallback(() => {
-      setData([]);
-      setPage(0);
-      setSelectedCommune('');
-      setLoading(true);
-      setShowLoadingFooter(true);
-      if (page === 0) fetchData();
-    }, []),
-  );
-
-  useEffect(() => {
-    fetchData();
-  }, [page]);
-
-  const fetchCommunes = async () => {
-    try {
-      const response = await getCommunes();
-      if (response) {
-        setCommunes(response.facets[0].facets);
-      }
-    } catch (err) {
-      errorAlert(err.message);
-    }
-  };
-
-  useEffect(() => {
-    fetchCommunes();
-  }, []);
-
-  const updateFilters = (renting, returning) => {
-    setRentingFilter(renting);
-    setReturningFilter(returning);
-    refreshData();
-  };
-
-  const searchData = async () => {
-    try {
-      setData([]);
-      const res = await callApi(
+    dispatch(
+      getFirstChunkOfVelibs(
         size,
-        0,
         selectedCommune,
         rentingFilter,
         returningFilter,
         searchQuery,
-      );
-      if (res.data.records.length < 5) setShowLoadingFooter(false);
-      if (res.status === 200) setData(prev => [...prev, ...res.data.records]);
-    } catch (err) {
-      errorAlert(err.message);
-    }
-    if (page === 0) setLoading(false);
+      ),
+    );
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      setPage(0);
+      setSelectedCommune('');
+      fetchData();
+    }, []),
+  );
+
+  useEffect(() => {
+    if (page !== 0) fetchMoreData();
+  }, [page]);
+
+  useEffect(() => {
+    dispatch(
+      getFirstChunkOfVelibs(
+        size,
+        selectedCommune,
+        rentingFilter,
+        returningFilter,
+        searchQuery,
+      ),
+    );
+  }, [selectedCommune, rentingFilter, returningFilter]);
+
+  const updateFilters = (renting, returning) => {
+    setRentingFilter(renting);
+    setReturningFilter(returning);
+  };
+
+  const searchData = async () => {
+    dispatch(
+      getFirstChunkOfVelibs(
+        size,
+        selectedCommune,
+        rentingFilter,
+        returningFilter,
+        searchQuery,
+      ),
+    );
+    if (errorVelib) errorAlert(errorVelib);
   };
 
   return (
     <UserLayout title="Velib">
-      <SearchContainer>
-        <StyledSearchbar
+      <FiltersContainer>
+        <Searchbar
           placeholder={t('screen.velibs.search')}
           onChangeText={setSearchQuery}
           value={searchQuery}
-          onClearIconPress={() => {
-            setData([]), setPage(0);
-          }}
+          icon={() => <Icon name="search" size={0} />}
+          right={({color, style, testID}) => (
+            <SearchButton onPress={() => searchData()}>
+              <Icon name="search" size={18} color={theme.white} />
+            </SearchButton>
+          )}
         />
-        <SearchButton>
-          <Button pressHandler={() => searchData()} icon="search" />
-        </SearchButton>
-      </SearchContainer>
-      <SearchContainer>
-        <Menu
-          visible={menuVisible}
-          onDismiss={() => setMenuVisible(false)}
-          anchor={
-            <Button
-              label={selectedCommune || t('screen.velibs.town')}
-              variant="blue"
-              pressHandler={() => setMenuVisible(true)}
-            />
-          }>
-          <Menu.Item
-            onPress={() => {
-              setSelectedCommune(null);
-              setPage(0);
-              setData([]);
-              setMenuVisible(false);
-              setShowLoadingFooter(true);
-            }}
-            title={t('screen.velibs.town')}
+        <OtherFiltersContainer>
+          <Checkbox.Item
+            label={t('screen.velibs.rent')}
+            color={theme.color}
+            style={{paddingStart: 4, paddingEnd: 0}}
+            labelStyle={{color: theme.color}}
+            status={rentingFilter ? 'checked' : 'unchecked'}
+            onPress={() => updateFilters(!rentingFilter, returningFilter)}
           />
-          {communes.map((commune, index) => (
+          <Checkbox.Item
+            label={t('screen.velibs.return')}
+            color={theme.color}
+            style={{paddingStart: 0, paddingEnd: 4}}
+            labelStyle={{color: theme.color}}
+            status={returningFilter ? 'checked' : 'unchecked'}
+            onPress={() => updateFilters(rentingFilter, !returningFilter)}
+          />
+          <Menu
+            visible={menuVisible}
+            onDismiss={() => setMenuVisible(false)}
+            anchor={
+              <Button
+                label={selectedCommune || t('screen.velibs.town')}
+                variant="blue"
+                pressHandler={() => setMenuVisible(true)}
+                icon="filter"
+              />
+            }>
             <Menu.Item
-              key={index}
               onPress={() => {
-                setSelectedCommune(commune.name);
+                setSelectedCommune(null);
                 setPage(0);
-                setData([]);
                 setMenuVisible(false);
               }}
-              title={commune.name}
+              title={t('screen.velibs.town')}
             />
-          ))}
-        </Menu>
-      </SearchContainer>
-      <FilterContainer>
-        <Checkbox.Item
-          label={t('screen.velibs.rent')}
-          color={theme.color}
-          labelStyle={{color: theme.color}}
-          status={rentingFilter ? 'checked' : 'unchecked'}
-          onPress={() => updateFilters(!rentingFilter, returningFilter)}
-        />
-        <Checkbox.Item
-          label={t('screen.velibs.return')}
-          color={theme.color}
-          labelStyle={{color: theme.color}}
-          status={returningFilter ? 'checked' : 'unchecked'}
-          onPress={() => updateFilters(rentingFilter, !returningFilter)}
-        />
-      </FilterContainer>
+            {communs.map((commune, index) => (
+              <Menu.Item
+                key={index}
+                onPress={() => {
+                  setSelectedCommune(commune.name);
+                  setPage(0);
+                  setMenuVisible(false);
+                }}
+                title={commune.name}
+              />
+            ))}
+          </Menu>
+        </OtherFiltersContainer>
+      </FiltersContainer>
       {loading ? (
         <Centered>
           <ActivityIndicator size="large" color={theme.red} />
         </Centered>
       ) : (
         <List
-          data={data}
-          renderItem={({item}) => <Velib item={item} />}
+          data={velibs}
+          renderItem={({item}) => <VelibItem item={item} />}
           keyExtractor={(item, index) => item.recordid + '_' + index}
           onEndReached={() => {
             setPage(prev => prev + 1);
@@ -198,7 +206,7 @@ const Velibs = () => {
             )
           }
           ListFooterComponent={() => {
-            if (showLoadingFooter) {
+            if (loadingMore) {
               return (
                 <Centered>
                   <ActivityIndicator size="large" color={theme.red} />
@@ -221,28 +229,20 @@ const Centered = styled.View`
   justify-content: center;
   align-items: center;
 `;
-const SearchContainer = styled.View`
-  padding: 8px 16px;
-  flex-direction: row;
-  align-items: center;
+const FiltersContainer = styled.View`
+  padding: 0 16px;
+  gap: 8px;
 `;
-const StyledSearchbar = styled(Searchbar)`
-  flex-basis: 80%;
-`;
-const SearchButton = styled.View`
-  width: 20%;
-  border-top-left-radius: 50px;
-  border-top-right-radius: 50px;
-  border-bottom-left-radius: 50px;
-  border-bottom-right-radius: 50px;
-  overflow: hidden;
-  margin: 10px;
-`;
-const FilterContainer = styled.View`
+const OtherFiltersContainer = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding: 8px 16px;
+`;
+const SearchButton = styled.Pressable`
+  background-color: ${({theme}) => theme.blue};
+  padding: 14px 16px;
+  border-radius: 100px;
+  margin-right: 4px;
 `;
 const Text = styled.Text`
   color: ${({theme}) => theme.color};
