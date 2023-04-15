@@ -23,7 +23,6 @@ const EventSingle = props => {
   };
   React.useEffect(() => {
     fetchData();
-    //dispatch(getSingleEvent());
   }, []);
 
   return loading ? (

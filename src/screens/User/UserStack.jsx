@@ -8,7 +8,7 @@ import Profile from './Profile';
 import HomeStack from './Home/HomeStack';
 import Favorites from './Favorites';
 import {useTranslation} from 'react-i18next';
-import Velibs from './Velibs';
+import VelibStack from './Velibs/VelibStack';
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -64,7 +64,7 @@ const UserStack = () => {
           name="Home"
           component={HomeStack}
         />
-        <Tab.Screen name="Velib" component={Velibs} />
+        <Tab.Screen name="Velib" component={VelibStack} />
         <Tab.Screen
           options={{
             tabBarLabel: t('misc.favorites'),

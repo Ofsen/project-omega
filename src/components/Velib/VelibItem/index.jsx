@@ -5,10 +5,12 @@ import {Share} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import {errorAlert} from '../../../utils/notifications';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useNavigation} from '@react-navigation/native';
 
 export const VelibItem = ({item}) => {
   const theme = useTheme();
   const {t} = useTranslation();
+  const navigation = useNavigation();
 
   const [favorite, setFavorite] = useState(false);
 
@@ -79,7 +81,7 @@ export const VelibItem = ({item}) => {
   }, []);
 
   return (
-    <StationItem>
+    <StationItem onPress={() => navigation.navigate('VelibMap', {fields})}>
       <InfoContainer>
         <IconRow bgColor={isRenting ? 'green' : theme.red}>
           <IconRowText>{t('screen.velibs.rent')}</IconRowText>
@@ -118,7 +120,7 @@ export const VelibItem = ({item}) => {
   );
 };
 
-const StationItem = styled.View`
+const StationItem = styled.Pressable`
   background-color: ${({theme}) => theme.secondaryBackground};
   padding: 16px;
   margin-bottom: 16px;

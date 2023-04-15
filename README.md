@@ -14,9 +14,9 @@ Une application qui liste les différentes bornes electriques pour les vehicules
 
 ## Pour le 20
 
-- [ ] Affichage de la borne la plus proche de l'utilisateur (en fonction de sa position GPS)
+- [x] Affichage de la borne la plus proche de l'utilisateur (en fonction de la dernière born selectionné)
 - [ ] notification lors du changement de disponibilité
-- [ ] Google MAPS
+- [x] Google MAPS
 - [x] Ajouter une borne en favoris
 
 ## Fonctions

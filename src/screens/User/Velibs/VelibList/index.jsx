@@ -1,20 +1,20 @@
 import React, {useEffect, useState, useCallback} from 'react';
 import styled, {useTheme} from 'styled-components';
 import {ActivityIndicator, Pressable} from 'react-native';
-import {UserLayout} from '../../../components/layout/UserLayout';
+import {UserLayout} from '../../../../components/layout/UserLayout';
 import {useFocusEffect} from '@react-navigation/native';
-import {errorAlert} from '../../../utils/notifications';
-import {Button} from '../../../components/Button';
+import {errorAlert} from '../../../../utils/notifications';
+import {Button} from '../../../../components/Button';
 import {Checkbox, Menu, Provider, Searchbar} from 'react-native-paper';
 import {useTranslation} from 'react-i18next';
-import {VelibItem} from '../../../components/Velib';
+import {VelibItem} from '../../../../components/Velib';
 import {useDispatch, useSelector} from 'react-redux';
 import Icon from 'react-native-vector-icons/Octicons';
 import {
   getCommunsVelib,
   getFirstChunkOfVelibs,
   getMoreVelibs,
-} from '../../../actions/velibs';
+} from '../../../../actions/velibs';
 
 const Velibs = () => {
   const theme = useTheme();
