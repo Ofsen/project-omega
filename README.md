@@ -43,4 +43,4 @@ Une application qui liste les différentes bornes electriques pour les vehicules
 - [x] musique de motus
 - [x] Detection du theme
 - [ ] redirigez l'utilisateur au click sur la notification | Voir universal-link
-- [x] Generer APK | [L'APK](https://github.com/Ofsen/project-omega/blob/main/Born.apk)
+- [x] Generer APK | [Here](https://github.com/Ofsen/project-omega/blob/main/Born.apk) or [here](https://www.mediafire.com/file/1lkdu1zjtnww94t/Born.apk/file)
