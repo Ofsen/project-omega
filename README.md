@@ -15,6 +15,8 @@ Une application qui liste les différentes bornes electriques pour les vehicules
 ## Pour le 20
 
 - [x] Affichage de la borne la plus proche de l'utilisateur (en fonction de la dernière born selectionné)
+- [x] Afficher la position de l'utilisateur
+- [x] Charger les born en fonction de la region visible sur la carte
 - [ ] notification lors du changement de disponibilité
 - [x] Google MAPS
 - [x] Ajouter une borne en favoris
@@ -41,4 +43,4 @@ Une application qui liste les différentes bornes electriques pour les vehicules
 - [x] musique de motus
 - [x] Detection du theme
 - [ ] redirigez l'utilisateur au click sur la notification | Voir universal-link
-- [ ] Generer APK
+- [x] Generer APK | [L'APK](https://github.com/Ofsen/project-omega/blob/main/Born.apk)
