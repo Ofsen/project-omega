@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:name=".MainApplication"
@@ -28,6 +29,10 @@
             android:launchMode="singleTask"
             android:windowSoftInputMode="adjustResize">
         </activity>
+        
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCuwMlwiBh9uAiOnU3m7vT8Hia-hzjKnZI"/>
     </application>
 
 </manifest>
