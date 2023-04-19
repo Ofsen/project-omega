@@ -23,11 +23,11 @@ export const VelibItem = ({item}) => {
     Share.share(
       {
         message: item.fields.name,
-        title: 'Location',
+        title: t('screen.velibs.location'),
         url: url,
       },
       {
-        dialogTitle: 'Share location',
+        dialogTitle: t('screen.velibs.shareLocation'),
       },
     );
   };

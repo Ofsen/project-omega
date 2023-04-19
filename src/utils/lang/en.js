@@ -26,6 +26,8 @@ module.exports = {
         return: 'Return',
         town: 'All the towns',
         search: 'Search',
+        shareLocation: 'Share location',
+        location: 'Location',
       },
       favorites: {
         title: 'Favorites',
@@ -50,6 +52,16 @@ module.exports = {
       french: 'French',
       notregisteredinyet: 'Not registered yet ? register',
       alreadyregistered: 'Already registered ? login',
+    },
+    permissions: {
+      location: {
+        title: 'Born Location Permission',
+        message:
+          'Born needs access to your location to show your position on the map.',
+        neutralButton: 'Ask Me Later',
+        negativeButton: 'Cancel',
+        positiveButton: 'OK',
+      },
     },
     errors: {
       passemail: 'Invalid email or password',

@@ -43,13 +43,11 @@ export default function VelibMap(props) {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
         {
-          title: 'Born Location Permission',
-          message:
-            'Born needs access to your location ' +
-            'to show your position on the map.',
-          buttonNeutral: 'Ask Me Later',
-          buttonNegative: 'Cancel',
-          buttonPositive: 'OK',
+          title: t('screen.permissions.location.title'),
+          message: t('screen.permissions.location.message'),
+          buttonNeutral: t('screen.permissions.location.neutralButton'),
+          buttonNegative: t('screen.permissions.location.negativeButton'),
+          buttonPositive: t('screen.permissions.location.positiveButton'),
         },
       );
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {

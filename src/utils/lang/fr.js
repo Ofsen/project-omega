@@ -26,6 +26,8 @@ module.exports = {
         return: 'Retourner',
         town: 'Toutes les communes',
         search: 'Rechercher',
+        shareLocation: 'Partager ma position',
+        location: 'Position',
       },
       favorites: {
         title: 'Favoris',
@@ -50,6 +52,16 @@ module.exports = {
       french: 'Français',
       notregisteredinyet: "Pas encore inscrit ? s'inscrire",
       alreadyregistered: 'Déja inscrit ? se connecter',
+    },
+    permissions: {
+      location: {
+        title: 'Born Permission de location ',
+        message:
+          "Born a besoin d'accéder à votre position pour afficher votre position sur la carte.",
+        neutralButton: 'Me demander plus tard',
+        negativeButton: 'Annuler',
+        positiveButton: 'OK',
+      },
     },
     errors: {
       passemail: 'Email ou mot de passe invalide',
