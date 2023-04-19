@@ -2,6 +2,9 @@
 
 Une application qui liste les différentes bornes electriques pour les vehicules electriques de la ville de Paris.
 
+## Demo
+https://drive.google.com/file/d/1dBqZPwXfTx0DmzNb4kQftkqkC3QeOR2w/view
+
 ## Pour le 6
 
 - [x] Liste des bornes electriques de la ville de Paris
@@ -17,6 +20,7 @@ Une application qui liste les différentes bornes electriques pour les vehicules
 - [x] Affichage de la borne la plus proche de l'utilisateur (en fonction de la dernière born selectionné)
 - [x] Afficher la position de l'utilisateur
 - [x] Charger les born en fonction de la region visible sur la carte
+- [x] Firebase message notifications
 - [ ] notification lors du changement de disponibilité
 - [x] Google MAPS
 - [x] Ajouter une borne en favoris
