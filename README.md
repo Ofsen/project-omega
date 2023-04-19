@@ -21,7 +21,6 @@ https://drive.google.com/file/d/1dBqZPwXfTx0DmzNb4kQftkqkC3QeOR2w/view
 - [x] Afficher la position de l'utilisateur
 - [x] Charger les born en fonction de la region visible sur la carte
 - [x] Firebase message notifications
-- [ ] notification lors du changement de disponibilité
 - [x] Google MAPS
 - [x] Ajouter une borne en favoris
 
